@@ -2,295 +2,362 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>No Surprises - Social Card</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>No Surprises</title>
+    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,700&display=swap" rel="stylesheet">
+    
     <style>
+        /* --- THEME --- */
         :root {
-            --bg-color: #ffde59;
-            --card-color: #ffffff;
-            --accent-color: #ff5757;
-            --text-color: #000000;
-            --border-width: 4px;
-            --shadow-offset: 8px;
+            --bg: #ffde59; /* Bright Yellow */
+            --white: #ffffff;
+            --red: #ff5757;
+            --black: #000000;
+            --border: 3px solid var(--black);
+            --shadow: 6px 6px 0px var(--black);
         }
 
-        * { box-sizing: border-box; font-family: 'Space Mono', monospace; }
+        * { box-sizing: border-box; font-family: 'Space Mono', monospace; -webkit-tap-highlight-color: transparent; }
 
         body {
-            background-color: var(--bg-color);
+            background-color: var(--bg);
             background-image: radial-gradient(#000 10%, transparent 11%);
             background-size: 20px 20px;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--black);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px; 
+            margin: 0 auto;
+        }
+
+        /* --- CARD --- */
+        .card {
+            background: var(--white);
+            border: var(--border);
+            box-shadow: var(--shadow);
+            padding: 2rem 1.5rem;
+            position: relative;
+            margin-bottom: 20px;
+            transition: transform 0.2s;
+            min-height: 55vh; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* --- COMIC STYLE LOGO --- */
+        .comic-header-wrapper {
+            position: relative;
+            text-align: center;
+            margin-bottom: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            color: var(--text-color);
         }
 
-        .container { width: 100%; max-width: 550px; perspective: 1000px; display: flex; flex-direction: column; gap: 20px; }
-
-        .card {
-            background: var(--card-color);
-            border: var(--border-width) solid var(--text-color);
-            box-shadow: var(--shadow-offset) var(--shadow-offset) 0px var(--text-color);
-            padding: 2rem;
-            position: relative;
-            transition: all 0.3s ease;
-            z-index: 2;
-            overflow-y: auto;
+        .comic-burst {
+            position: absolute;
+            width: 280px;
+            height: 120px;
+            background: var(--red);
+            z-index: 0;
+            border: 3px solid var(--black);
+            clip-path: polygon(
+                20% 0%, 32% 15%, 45% 0%, 55% 15%, 70% 0%, 80% 15%, 95% 5%, 85% 30%, 
+                100% 35%, 85% 50%, 100% 65%, 85% 70%, 95% 90%, 75% 80%, 60% 95%, 
+                50% 80%, 40% 95%, 25% 80%, 10% 95%, 20% 65%, 0% 60%, 15% 45%, 
+                0% 30%, 15% 20%
+            );
+            transform: rotate(-3deg);
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.2);
         }
 
-       
-        .landing-content { text-align: center; display: flex; flex-direction: column; gap: 2rem; padding: 1rem 0; }
-        .landing-text { font-size: 1.1rem; line-height: 1.8; text-transform: lowercase; }
-        .landing-text p { margin-bottom: 1.5rem; }
-        .landing-highlight { background: #000; color: #fff; padding: 4px 8px; font-weight: bold; }
-        .landing-sub { font-size: 0.9rem; opacity: 0.6; margin-top: -10px; font-weight: bold; }
-
-      
-        .github-footer { text-align: center; animation: fadeIn 1s ease 0.5s forwards; opacity: 0; }
-        .github-btn {
-            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-            background: #fff; color: #000; text-decoration: none; font-weight: bold;
-            border: 3px solid #000; padding: 12px 24px; box-shadow: 6px 6px 0px #000;
-            transition: all 0.2s ease; font-size: 0.9rem; text-transform: uppercase;
-        }
-        .github-btn:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0px #000; background: var(--accent-color); }
-        .github-btn svg { width: 20px; height: 20px; fill: currentColor; }
-
-      
         h1 {
-            font-size: 1.8rem; margin-top: 0; text-transform: uppercase; font-weight: 700;
-            background: var(--accent-color); color: #fff; display: inline-block;
-            padding: 0.4rem 0.8rem; border: 2px solid #000; box-shadow: 4px 4px 0px #000;
+            font-size: 1.8rem;
+            text-transform: uppercase;
+            color: var(--white);
+            position: relative;
+            z-index: 2;
+            margin: 0;
+            padding: 10px;
+            font-style: italic;
+            text-shadow: 3px 3px 0px var(--black);
+            transform: rotate(-3deg);
         }
-        .question-counter { font-size: 0.9rem; font-weight: bold; margin-bottom: 1.5rem; display: block; text-align: right; }
-        label { display: block; font-size: 1.2rem; margin-bottom: 0.5rem; font-weight: bold; }
-        .sub-label { font-size: 0.9rem; margin-bottom: 1.5rem; display: block; opacity: 0.7; font-style: italic; }
+
+        /* --- LANDING PAGE --- */
+        .landing-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem; 
+        }
+
+        .landing-text { 
+            line-height: 1.3;
+            font-size: 0.95rem;
+            text-align: center; 
+            letter-spacing: -0.5px;
+        }
+        
+        .landing-text p { margin-bottom: 8px; }
+        
+        .highlight { 
+            background: var(--black); 
+            color: var(--white); 
+            padding: 2px 6px; 
+            display: inline-block;
+            transform: rotate(-1deg);
+        }
+
+        /* --- INPUTS & BUTTONS --- */
+        label { font-size: 1.1rem; font-weight: bold; display: block; margin-bottom: 5px; }
+        .sub-label { font-size: 0.85rem; opacity: 0.6; font-style: italic; margin-bottom: 15px; display: block; }
+
         input[type="text"] {
-            width: 100%; padding: 1rem; font-size: 1rem; border: 3px solid #000;
-            background: #f0f0f0; outline: none; transition: 0.2s;
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            border: var(--border);
+            background: #f4f4f4;
+            outline: none;
+            border-radius: 0;
         }
-        input[type="text"]:focus { background: #fff; box-shadow: 4px 4px 0px #000; }
-        
+        input[type="text"]:focus { background: var(--white); box-shadow: 4px 4px 0px var(--black); }
+
         .btn {
-            background: #000; color: #fff; border: none; padding: 1rem 2rem;
-            font-size: 1.1rem; font-weight: bold; cursor: pointer; border: 3px solid transparent;
-            width: 100%; text-transform: uppercase; margin-top: 1rem; position: relative; overflow: hidden;
+            background: var(--black);
+            color: var(--white);
+            border: none;
+            padding: 15px;
+            width: 100%;
+            font-size: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 15px;
+            border: 3px solid transparent;
+            transition: 0.1s;
         }
-        .btn:hover {
-            background: var(--accent-color); border: 3px solid #000; color: #000;
-            box-shadow: 4px 4px 0px #000; transform: translate(-2px, -2px);
+        .btn:active { transform: translate(2px, 2px); }
+
+        /* --- SHARE BUTTON (New Style) --- */
+        .share-btn {
+            background: var(--red);
+            color: var(--white);
+            box-shadow: 4px 4px 0px var(--black);
         }
+        .share-btn:hover { background: #000; }
 
- 
-        .checkbox-group { display: flex; flex-direction: column; gap: 12px; }
-        .checkbox-option {
-            display: flex; align-items: center; border: 3px solid #000; padding: 12px;
-            cursor: pointer; transition: 0.2s; background: #fff; font-weight: bold; font-size: 0.95rem;
+        /* --- CHECKBOXES --- */
+        .option {
+            display: flex;
+            align-items: center;
+            border: var(--border);
+            padding: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            background: var(--white);
+            font-weight: bold;
+            font-size: 0.9rem;
         }
-        .checkbox-option:hover { background: #ffde59; transform: translate(-2px, -2px); box-shadow: 4px 4px 0px #000; }
-        .checkbox-option input { margin-right: 15px; height: 20px; width: 20px; accent-color: #000; cursor: pointer; }
-        .checkbox-option.selected { background: #000; color: #fff; }
+        .option:hover { background: var(--bg); }
+        .option.selected { background: var(--black); color: var(--white); }
+        .option input { margin-right: 12px; width: 18px; height: 18px; accent-color: var(--black); }
 
-     
-        .progress-container { width: 100%; height: 12px; border: 3px solid #000; margin-bottom: 25px; background: #fff; }
-        .progress-bar { height: 100%; background: var(--accent-color); width: 0%; transition: width 0.3s ease; }
+        /* --- PROGRESS BAR --- */
+        .progress-box { width: 100%; height: 10px; border: var(--border); background: var(--white); margin-bottom: 8px; }
+        .progress-fill { height: 100%; background: var(--red); width: 0%; transition: width 0.3s; }
+        .step-count { text-align: right; font-weight: bold; font-size: 0.75rem; margin-bottom: 15px; display: block; }
 
+        /* --- SCREENS --- */
         .hidden { display: none !important; }
-        .fade-in { animation: fadeIn 0.4s ease; }
+        .fade-in { animation: fade 0.4s ease; }
+        @keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .shake { animation: shake 0.4s ease; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } 100% { transform: translateX(0); } }
 
+        /* --- RESULT CARD --- */
+        .res-header { border-bottom: var(--border); padding-bottom: 10px; margin-bottom: 15px; }
+        .res-name { font-size: 2.2rem; background: var(--black); color: var(--white); padding: 5px 10px; display: inline-block; margin-bottom: 5px; }
+        .res-sub { font-style: italic; font-size: 0.9rem; line-height: 1.4; }
         
-        #resultCard { text-align: left; }
-        .result-header { border-bottom: 3px solid #000; padding-bottom: 1rem; margin-bottom: 1rem; }
-        .result-name { font-size: 2.5rem; line-height: 1; font-weight: 900; background: #000; color: #fff; padding: 5px 10px; display: inline-block; margin-bottom: 10px; }
-        .result-sub { font-size: 0.9rem; font-style: italic; margin-top: 5px; line-height: 1.4; }
-        .result-section { margin-bottom: 1.5rem; border: 2px solid #000; padding: 1rem; background: #f9f9f9; }
-        .result-section h3 { margin: -25px 0 10px 0; background: var(--accent-color); border: 2px solid #000; display: inline-block; padding: 2px 8px; font-size: 0.8rem; color: #fff; text-transform: uppercase; }
-        .result-row { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.9rem; }
-        .result-value { font-weight: bold; }
-        .final-msg-box { text-align: center; font-size: 1.1rem; font-weight: bold; padding: 1.5rem; border: 3px dashed #000; margin-top: 1rem; background: #ffde59; }
-        .restart-btn { background: transparent; color: #000; border: none; text-decoration: underline; margin-top: 20px; cursor: pointer; font-weight: bold; width: 100%; text-align: center; }
-
-        @media (max-width: 600px) {
-            body { align-items: flex-start; padding: 10px; overflow-y: scroll; }
-            .container { max-width: 100%; }
-            .card { padding: 1.5rem; box-shadow: 4px 4px 0px #000; max-height: none; overflow: visible; }
-            .result-header { padding-bottom: 0.5rem; margin-bottom: 0.8rem; }
-            .result-name { font-size: 1.8rem; }
-            .result-section { padding: 0.6rem; margin-bottom: 1rem; border-width: 2px; }
-            .result-section h3 { margin: -18px 0 5px 0; font-size: 0.7rem; }
-            .result-row { font-size: 0.8rem; margin-bottom: 2px; }
-            .final-msg-box { padding: 0.8rem; font-size: 0.9rem; }
-            .github-footer { padding-bottom: 20px; }
-            .landing-text { font-size: 1rem; line-height: 1.6; }
-            .landing-content { gap: 1.5rem; }
+        .res-box { border: var(--border); padding: 12px; margin-bottom: 15px; position: relative; background: #fafafa; }
+        .res-label { 
+            position: absolute; top: -10px; left: 10px; 
+            background: var(--red); color: var(--white); 
+            padding: 2px 6px; font-size: 0.65rem; border: var(--border); 
+            text-transform: uppercase; font-weight: bold;
         }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes shake { 0% { transform: translateX(0); } 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 75% { transform: translateX(-5px); } 100% { transform: translateX(0); } }
+        .res-row { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 4px; }
+        .res-val { font-weight: bold; }
+        
+        .final-box { 
+            border: 2px dashed var(--black); padding: 15px; 
+            text-align: center; background: var(--bg); font-weight: bold;
+        }
+        .action-row { display: flex; gap: 10px; margin-top: 20px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="card" id="mainCard">
+    <div class="container">
         
-        <div id="landingPage" class="landing-content fade-in">
-            <h1 style="align-self: center; font-size: 2rem;">No Surprises</h1>
-            <div class="landing-text">
-                <p>you meet someone new.</p>
-                <p>the script starts playing.</p>
-                <p style="font-style: italic; opacity: 0.7;">"what do you do?"<br>"where are you from?"</p>
-                <p>by the third time, it feels like deja vu.</p>
-                <p>so here's a filter.</p>
-                <p>one link that defines your vibe, your style, and your boundaries.</p>
-                <p>no repeating yourself.</p>
-                <p class="landing-highlight">send this before you text.</p>
-                <p>the real conversation starts after.</p>
-            </div>
-            <button class="btn" onclick="startForm()">MAKE MY CARD</button>
-            <div class="landing-sub">30 s</div>
-        </div>
+        <div class="card" id="cardElement">
+            
+            <div id="landing" class="landing-content">
+                <div class="comic-header-wrapper">
+                    <div class="comic-burst"></div>
+                    <h1>No Surprises</h1>
+                </div>
 
-        <div id="formInterface" class="hidden">
-            <div class="progress-container">
-                <div class="progress-bar" id="progressBar"></div>
-            </div>
-            <span class="question-counter" id="stepCount">QUESTION 1/9</span>
+                <div class="landing-text">
+                    <p>you meet someone new.</p>
+                    <p>the script starts playing.</p>
+                    <p style="opacity: 0.6;">"what do you do?"<br>"where are you from?"</p>
+                    <p>by the third time, it feels like deja vu.</p>
+                    <p>so i made a filter.</p>
+                    <p>one link that defines your vibe,<br> your style, and your boundaries.</p>
+                    <p>no repeating yourself.</p>
+                    <p><span class="highlight">send this before you text.</span></p>
+                    <p>the real conversation starts after.</p>
+                </div>
 
-            <form id="wizardForm" onsubmit="event.preventDefault();">
-                <div class="step fade-in" data-step="1">
+                <button class="btn" onclick="start()">MAKE MY CARD</button>
+                <div style="text-align: center; font-size: 0.8rem; font-weight: bold; opacity: 0.5; margin-top: -10px;">30s</div>
+            </div>
+
+            <div id="wizard" class="hidden">
+                <div class="progress-box"><div class="progress-fill" id="bar"></div></div>
+                <span class="step-count" id="count">QUESTION 1/9</span>
+
+                <div class="step" data-step="1">
                     <label>1 → What's your name?</label>
                     <span class="sub-label">just first name</span>
-                    <input type="text" id="name" placeholder="type here..." required>
-                    <button class="btn" type="button" onclick="nextStep()">Next</button>
+                    <input type="text" id="name" placeholder="type here...">
+                    <button class="btn" onclick="next()">NEXT</button>
                 </div>
 
                 <div class="step hidden" data-step="2">
                     <label>2 → What do you do?</label>
-                    <span class="sub-label">which school/college/work? major/job?</span>
-                    <input type="text" id="occupation" placeholder="e.g. stanford cs major..." required>
-                    <button class="btn" type="button" onclick="nextStep()">Next</button>
+                    <span class="sub-label">school / college / work?</span>
+                    <input type="text" id="occ" placeholder="e.g. stanford cs...">
+                    <button class="btn" onclick="next()">NEXT</button>
                 </div>
 
                 <div class="step hidden" data-step="3">
                     <label>3 → What do you do for fun?</label>
-                    <span class="sub-label">hobbies, interests, things that matter</span>
-                    <input type="text" id="hobbies" placeholder="type here..." required>
-                    <button class="btn" type="button" onclick="nextStep()">Next</button>
+                    <span class="sub-label">hobbies that actually matter</span>
+                    <input type="text" id="hobby" placeholder="type here...">
+                    <button class="btn" onclick="next()">NEXT</button>
                 </div>
 
                 <div class="step hidden" data-step="4">
                     <label>4 → Current life vibe?</label>
-                    <span class="sub-label">where are you at right now?</span>
-                    <div class="checkbox-group">
-                        <label class="checkbox-option"><input type="radio" name="vibe" value="building myself"> 🏗️ Building myself</label>
-                        <label class="checkbox-option"><input type="radio" name="vibe" value="studying / working / both"> 📚 Studying / Working / Both</label>
-                        <label class="checkbox-option"><input type="radio" name="vibe" value="chilling & observing"> 🕶️ Chilling & observing</label>
-                        <label class="checkbox-option"><input type="radio" name="vibe" value="figuring stuff out"> 🧩 Figuring stuff out</label>
-                        <label class="checkbox-option"><input type="radio" name="vibe" value="explain later"> 🤫 I'll explain when we talk</label>
-                    </div>
-                    <button class="btn" type="button" onclick="nextStep()">Next</button>
+                    <div class="option" onclick="sel(this, 'vibe')"><input type="radio" name="vibe" value="building myself">building myself</div>
+                    <div class="option" onclick="sel(this, 'vibe')"><input type="radio" name="vibe" value="studying / working">studying / working</div>
+                    <div class="option" onclick="sel(this, 'vibe')"><input type="radio" name="vibe" value="chilling">chilling & observing</div>
+                    <div class="option" onclick="sel(this, 'vibe')"><input type="radio" name="vibe" value="figuring it out">figuring stuff out</div>
+                    <div class="option" onclick="sel(this, 'vibe')"><input type="radio" name="vibe" value="explain later">explain later</div>
+                    <button class="btn" onclick="next()">NEXT</button>
                 </div>
 
                 <div class="step hidden" data-step="5">
-                    <label>5 → How do you reply?</label>
-                    <span class="sub-label">be honest about your texting style</span>
-                    <div class="checkbox-group">
-                        <label class="checkbox-option"><input type="radio" name="reply" value="fast"> ⚡ Fast</label>
-                        <label class="checkbox-option"><input type="radio" name="reply" value="normal"> 🙂 Normal</label>
-                        <label class="checkbox-option"><input type="radio" name="reply" value="slow"> 🐢 Slow</label>
-                        <label class="checkbox-option"><input type="radio" name="reply" value="in batches"> 📦 I reply in batches</label>
-                        <label class="checkbox-option"><input type="radio" name="reply" value="depends"> 😏 Depends how much I like you</label>
-                    </div>
-                    <button class="btn" type="button" onclick="nextStep()">Next</button>
+                    <label>5 → Reply style?</label>
+                    <div class="option" onclick="sel(this, 'reply')"><input type="radio" name="reply" value="fast">⚡ fast</div>
+                    <div class="option" onclick="sel(this, 'reply')"><input type="radio" name="reply" value="normal">🙂 normal</div>
+                    <div class="option" onclick="sel(this, 'reply')"><input type="radio" name="reply" value="slow">🐢 slow</div>
+                    <div class="option" onclick="sel(this, 'reply')"><input type="radio" name="reply" value="in batches">📦 in batches</div>
+                    <div class="option" onclick="sel(this, 'reply')"><input type="radio" name="reply" value="depends">😏 depends</div>
+                    <button class="btn" onclick="next()">NEXT</button>
                 </div>
 
-                <div class="step hidden" data-step="6">
-                    <label>6 → Your conversation style?</label>
-                    <span class="sub-label">pick 2 that describe how you talk</span>
-                    <div class="checkbox-group" data-limit="2">
-                        <label class="checkbox-option"><input type="checkbox" name="convo" value="funny"> 😂 Funny</label>
-                        <label class="checkbox-option"><input type="checkbox" name="convo" value="thoughtful"> 🤔 Thoughtful</label>
-                        <label class="checkbox-option"><input type="checkbox" name="convo" value="chill"> 🧊 Chill</label>
-                        <label class="checkbox-option"><input type="checkbox" name="convo" value="chaotic good"> 🌀 Chaotic Good</label>
-                        <label class="checkbox-option"><input type="checkbox" name="convo" value="sarcastic but soft"> 🙃 Sarcastic but soft</label>
-                        <label class="checkbox-option"><input type="checkbox" name="convo" value="dry but loyal"> 🌵 Dry but loyal</label>
-                    </div>
-                    <button class="btn" type="button" onclick="nextStep()">Next</button>
+                <div class="step hidden" data-step="6" data-limit="2">
+                    <label>6 → Conversation style? (Pick 2)</label>
+                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="funny">funny</div>
+                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="thoughtful">thoughtful</div>
+                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="chill">chill</div>
+                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="chaotic">chaotic good</div>
+                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="sarcastic">sarcastic</div>
+                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="dry">dry but loyal</div>
+                    <button class="btn" onclick="next()">NEXT</button>
                 </div>
 
-                <div class="step hidden" data-step="7">
-                    <label>7 → What are you good at socially?</label>
-                    <span class="sub-label">pick 2 things you bring to conversations</span>
-                    <div class="checkbox-group" data-limit="2">
-                        <label class="checkbox-option"><input type="checkbox" name="social" value="questions"> ❓ Asking good questions</label>
-                        <label class="checkbox-option"><input type="checkbox" name="social" value="interesting"> ✨ Keeping conversations interesting</label>
-                        <label class="checkbox-option"><input type="checkbox" name="social" value="listening"> 👂 Listening well</label>
-                        <label class="checkbox-option"><input type="checkbox" name="social" value="energy"> 🔋 Matching energy</label>
-                        <label class="checkbox-option"><input type="checkbox" name="social" value="recs"> 🎵 Giving good recs</label>
-                        <label class="checkbox-option"><input type="checkbox" name="social" value="comfort"> 🛋️ Making people feel comfortable</label>
-                    </div>
-                    <button class="btn" type="button" onclick="nextStep()">Next</button>
+                <div class="step hidden" data-step="7" data-limit="2">
+                    <label>7 → Good at socially? (Pick 2)</label>
+                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="questions">asking questions</div>
+                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="listening">listening</div>
+                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="energy">matching energy</div>
+                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="recs">giving recs</div>
+                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="comfort">making ppl comfortable</div>
+                    <button class="btn" onclick="next()">NEXT</button>
                 </div>
 
-                <div class="step hidden" data-step="8">
-                    <label>8 → What are you working on?</label>
-                    <span class="sub-label">pick 1-2 things you're trying to improve</span>
-                    <div class="checkbox-group" data-limit="2">
-                        <label class="checkbox-option"><input type="checkbox" name="work" value="starting convos"> 🗣️ Starting conversations</label>
-                        <label class="checkbox-option"><input type="checkbox" name="work" value="replying consistently"> 📩 Replying consistently</label>
-                        <label class="checkbox-option"><input type="checkbox" name="work" value="feelings"> 💝 Expressing feelings</label>
-                        <label class="checkbox-option"><input type="checkbox" name="work" value="taking hints"> 🕵️ Taking hints</label>
-                        <label class="checkbox-option"><input type="checkbox" name="work" value="dry streaks"> 💧 Ending dry streaks</label>
-                        <label class="checkbox-option"><input type="checkbox" name="work" value="opening up"> 🔓 Opening up quickly</label>
-                    </div>
-                    <button class="btn" type="button" onclick="nextStep()">Next</button>
+                <div class="step hidden" data-step="8" data-limit="2">
+                    <label>8 → Working on? (Pick 1-2)</label>
+                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="starting">starting convos</div>
+                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="replying">replying faster</div>
+                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="feelings">feelings</div>
+                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="hints">taking hints</div>
+                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="opening">opening up</div>
+                    <button class="btn" onclick="next()">NEXT</button>
                 </div>
 
                 <div class="step hidden" data-step="9">
                     <label>9 → Before you text me...</label>
-                    <span class="sub-label">anything they should know? set expectations</span>
-                    <input type="text" id="finalMsg" placeholder="type here..." required>
-                    <button class="btn" type="button" onclick="generateCard()">GENERATE CARD 🚀</button>
+                    <input type="text" id="final" placeholder="set expectations...">
+                    <button class="btn" onclick="finish()">GENERATE CARD 🚀</button>
                 </div>
-            </form>
-        </div>
+            </div>
 
-        <div id="resultCard" class="hidden fade-in">
-            <div class="result-header">
-                <div class="result-name" id="res-name">NAME</div>
-                <div class="result-sub" id="res-occupation">Occupation</div>
-                <div class="result-sub" id="res-hobbies">Hobbies</div>
+            <div id="result" class="hidden">
+                <div class="res-header">
+                    <div class="res-name" id="r-name">NAME</div>
+                    <div class="res-sub" id="r-occ">Occupation</div>
+                    <div class="res-sub" id="r-hob">Hobbies</div>
+                </div>
+
+                <div class="res-box">
+                    <div class="res-label">The Vibe</div>
+                    <div class="res-row"><span>Current Era:</span> <span class="res-val" id="r-vibe">...</span></div>
+                    <div class="res-row"><span>Reply Style:</span> <span class="res-val" id="r-reply">...</span></div>
+                </div>
+
+                <div class="res-box">
+                    <div class="res-label">Style</div>
+                    <div class="res-val" id="r-convo">...</div>
+                </div>
+
+                <div class="res-box">
+                    <div class="res-label">I Bring</div>
+                    <div class="res-val" id="r-social">...</div>
+                </div>
+
+                <div class="res-box">
+                    <div class="res-label">Working On</div>
+                    <div class="res-val" id="r-work">...</div>
+                </div>
+
+                <div class="final-box" id="r-final">...</div>
+                
+                <div class="action-row" data-html2canvas-ignore="true">
+                    <button class="btn share-btn" id="shareBtn" onclick="shareCard()">SHARE CARD 📤</button>
+                    <button class="btn" style="background:transparent; color:#000; border:2px solid #000; margin-top:0;" onclick="location.reload()">↺</button>
+                </div>
             </div>
-            <div class="result-section">
-                <h3>The Vibe</h3>
-                <div class="result-row"><span>Current Era:</span><span class="result-value" id="res-vibe">Building myself</span></div>
-                <div class="result-row"><span>Reply Style:</span><span class="result-value" id="res-reply">Fast</span></div>
-            </div>
-            <div class="result-section">
-                <h3>Conversation Style</h3>
-                <div id="res-convo" class="result-value" style="line-height:1.6">Funny, Chill</div>
-            </div>
-            <div class="result-section">
-                <h3>What I bring</h3>
-                <div id="res-social" class="result-value" style="line-height:1.6">Listening, Energy</div>
-            </div>
-            <div class="result-section">
-                <h3>Working On</h3>
-                <div id="res-work" class="result-value" style="line-height:1.6">Replying, Feelings</div>
-            </div>
-            <div class="final-msg-box">
-                <div style="font-size:0.7rem; text-transform:uppercase; margin-bottom:5px;">Before you text me:</div>
-                <span id="res-final">"Don't be dry"</span>
-            </div>
-            <button class="restart-btn" onclick="location.reload()">Make your own ↺</button>
+
         </div>
     </div>
 
@@ -300,178 +367,165 @@
             Star on GitHub
         </a>
     </div>
-</div>
 
 <script>
-
-    let currentStep = 1;
-    const totalSteps = 9;
-
-    function startForm() {
-        document.getElementById('landingPage').style.display = 'none';
-        document.getElementById('formInterface').classList.remove('hidden');
-        document.getElementById('formInterface').classList.add('fade-in');
-    }
-
-    function updateUI() {
-        const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
-        document.getElementById('progressBar').style.width = `${progress}%`;
-        document.getElementById('stepCount').innerText = `QUESTION ${currentStep}/${totalSteps}`;
-    }
-
-   
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Enter') {
-            const activeStep = document.querySelector(`.step[data-step="${currentStep}"]`);
-            if (!activeStep.classList.contains('hidden')) {
-                const isLastStep = currentStep === totalSteps;
-                if(isLastStep) generateCard();
-                else nextStep();
-            }
-        }
-    });
-
-    function nextStep() {
-        const currentDiv = document.querySelector(`.step[data-step="${currentStep}"]`);
-        
- 
-        const textInput = currentDiv.querySelector('input[type="text"]');
-        if (textInput && textInput.value.trim() === "") {
-            shake(textInput);
-            return;
-        }
-
+    // --- DATABASE CONFIG ---
+    const DB_URL = "https://vhwwantlhvevntkhzjev.supabase.co";
+    const DB_KEY = "sb_publishable_vkOakpvu1KvkambRZ_k_LA_pJ6EP-Aa";
     
-        const checkboxes = currentDiv.querySelectorAll('input[type="checkbox"], input[type="radio"]');
-        if (checkboxes.length > 0) {
-            const isChecked = Array.from(checkboxes).some(cb => cb.checked);
-            if (!isChecked) {
-                shake(currentDiv.querySelector('.btn')); 
-                return;
-            }
-        }
+    let db = null;
+    try {
+        if(window.supabase) db = window.supabase.createClient(DB_URL, DB_KEY);
+    } catch(e) { console.log("DB Offline"); }
 
-  
-        currentDiv.classList.add('hidden');
-        currentDiv.classList.remove('fade-in');
+    // --- STATE ---
+    let step = 1;
+    const total = 9;
+    const data = {};
 
-        currentStep++;
-
-        if (currentStep <= totalSteps) {
-            const nextDiv = document.querySelector(`.step[data-step="${currentStep}"]`);
-            nextDiv.classList.remove('hidden');
-            nextDiv.classList.add('fade-in');
-            updateUI();
-            
-   
-            const nextInput = nextDiv.querySelector('input[type="text"]');
-            if(nextInput) setTimeout(() => nextInput.focus(), 100);
-        }
+    function start() {
+        document.getElementById('landing').classList.add('hidden');
+        document.getElementById('wizard').classList.remove('hidden');
+        document.getElementById('wizard').classList.add('fade-in');
     }
 
-    function shake(element) {
-        element.style.borderColor = "red";
-        element.classList.add('shake');
-        setTimeout(() => {
-            element.classList.remove('shake');
-            element.style.borderColor = "#000"; 
-        }, 500);
+    // --- INPUT HANDLERS ---
+    function sel(el, key) {
+        const sibs = el.parentElement.querySelectorAll('.option');
+        sibs.forEach(s => {
+            s.classList.remove('selected');
+            s.querySelector('input').checked = false;
+        });
+        el.classList.add('selected');
+        el.querySelector('input').checked = true;
     }
 
+    function toggle(el) {
+        const input = el.querySelector('input');
+        const parent = el.closest('.step');
+        const limit = parseInt(parent.getAttribute('data-limit') || 10);
+        const checked = parent.querySelectorAll('input:checked').length;
 
-    document.querySelectorAll('.checkbox-group[data-limit]').forEach(group => {
-        const limit = parseInt(group.getAttribute('data-limit'));
-        const checkboxes = group.querySelectorAll('input[type="checkbox"]');
-        checkboxes.forEach(cb => {
-            cb.addEventListener('change', () => {
-                const checkedCount = Array.from(checkboxes).filter(c => c.checked).length;
-                checkboxes.forEach(c => {
-                    if (!c.checked) c.disabled = checkedCount >= limit;
-                });
-            });
-        });
-    });
+        if(!input.checked && checked >= limit) return;
 
-  
-    document.querySelectorAll('.checkbox-option input').forEach(input => {
-        input.addEventListener('change', function() {
-            if(this.type === 'radio') {
-                const name = this.name;
-                document.querySelectorAll(`input[name="${name}"]`).forEach(rad => {
-                    rad.closest('.checkbox-option').classList.remove('selected');
-                });
-            }
-            if(this.checked) this.closest('.checkbox-option').classList.add('selected');
-            else this.closest('.checkbox-option').classList.remove('selected');
-        });
-    });
+        input.checked = !input.checked;
+        if(input.checked) el.classList.add('selected');
+        else el.classList.remove('selected');
+    }
 
-    async function generateCard() {
-        const finalInput = document.getElementById('finalMsg');
-        if(finalInput.value.trim() === "") {
-            shake(finalInput);
-            return;
-        }
-
-        const btn = document.querySelector('button[onclick="generateCard()"]');
-        btn.innerText = "GENERATING...";
-
- 
-        const name = document.getElementById('name').value;
-        const occ = document.getElementById('occupation').value;
-        const hobbies = document.getElementById('hobbies').value;
-        const vibe = document.querySelector('input[name="vibe"]:checked').value;
-        const reply = document.querySelector('input[name="reply"]:checked').value;
+    function next() {
+        const div = document.querySelector(`.step[data-step="${step}"]`);
         
-        const getCheckedValues = (name) => {
-            return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`))
-                        .map(cb => cb.value)
-                        .join(" + ");
-        };
+        const txt = div.querySelector('input[type="text"]');
+        if(txt && txt.value.trim() === "") { shake(txt); return; }
 
-        const convo = getCheckedValues('convo');
-        const social = getCheckedValues('social');
-        const work = getCheckedValues('work');
-        const finalMsg = finalInput.value;
+        const opts = div.querySelectorAll('input[type="radio"], input[type="checkbox"]');
+        if(opts.length > 0) {
+            const hasCheck = Array.from(opts).some(i => i.checked);
+            if(!hasCheck) { shake(div.querySelector('.btn')); return; }
+        }
 
-     
-        document.getElementById('res-name').innerText = name;
-        document.getElementById('res-occupation').innerText = occ;
-        document.getElementById('res-hobbies').innerText = hobbies;
-        document.getElementById('res-vibe').innerText = vibe;
-        document.getElementById('res-reply').innerText = reply;
-        document.getElementById('res-convo').innerText = convo;
-        document.getElementById('res-social').innerText = social;
-        document.getElementById('res-work').innerText = work;
-        document.getElementById('res-final').innerText = `"${finalMsg}"`;
+        if(txt) {
+            if(step === 1) data.name = txt.value;
+            if(step === 2) data.occ = txt.value;
+            if(step === 3) data.hob = txt.value;
+            if(step === 9) data.final = txt.value;
+        } else {
+            const checked = Array.from(div.querySelectorAll('input:checked')).map(i => i.value);
+            if(step === 4) data.vibe = checked[0];
+            if(step === 5) data.reply = checked[0];
+            if(step === 6) data.convo = checked.join(" + ");
+            if(step === 7) data.social = checked.join(" + ");
+            if(step === 8) data.work = checked.join(" + ");
+        }
 
-        document.getElementById('formInterface').classList.add('hidden');
-        document.getElementById('formInterface').style.display = 'none';
-        document.getElementById('resultCard').classList.remove('hidden');
-        document.getElementById('resultCard').classList.add('fade-in');
+        div.classList.add('hidden');
+        step++;
+        const nextDiv = document.querySelector(`.step[data-step="${step}"]`);
+        nextDiv.classList.remove('hidden');
+        nextDiv.classList.add('fade-in');
+        
+        document.getElementById('bar').style.width = ((step-1)/(total-1))*100 + "%";
+        document.getElementById('count').innerText = `QUESTION ${step}/${total}`;
+    }
 
-      
+    function shake(el) {
+        el.style.borderColor = "red";
+        el.classList.add('shake');
+        setTimeout(() => { el.classList.remove('shake'); el.style.borderColor = "black"; }, 500);
+    }
+
+    async function finish() {
+        const txt = document.getElementById('final');
+        if(txt.value.trim() === "") { shake(txt); return; }
+        data.final = txt.value;
+
+        // Render Card
+        document.getElementById('r-name').innerText = data.name;
+        document.getElementById('r-occ').innerText = data.occ;
+        document.getElementById('r-hob').innerText = data.hob;
+        document.getElementById('r-vibe').innerText = data.vibe;
+        document.getElementById('r-reply').innerText = data.reply;
+        document.getElementById('r-convo').innerText = data.convo;
+        document.getElementById('r-social').innerText = data.social;
+        document.getElementById('r-work').innerText = data.work;
+        document.getElementById('r-final').innerText = `"${data.final}"`;
+
+        document.getElementById('wizard').classList.add('hidden');
+        document.getElementById('result').classList.remove('hidden');
+        document.getElementById('result').classList.add('fade-in');
+
+        // Silent Save
+        if(db) {
+            await db.from('user').insert({
+                names: data.name,
+                occupatio: data.occ,
+                hobbies: data.hob,
+                vibe: data.vibe,
+                reply_style: data.reply,
+                convo_style: data.convo,
+                social_skills: data.social,
+                working_on: data.work,
+                final_msg: data.final
+            });
+        }
+    }
+
+    // --- SHARE FUNCTION ---
+    async function shareCard() {
+        const shareBtn = document.getElementById('shareBtn');
+        const originalText = shareBtn.innerText;
+        shareBtn.innerText = "CAPTURING...";
+        
         try {
-            const SUPABASE_URL = "https://vhwwantlhvevntkhzjev.supabase.co"; 
-            const SUPABASE_KEY = "sb_publishable_vkOakpvu1KvkambRZ_k_LA_pJ6EP-Aa";
-            
-            if (window.supabase) {
-                const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-                await supabase.from('user').insert({ 
-                    names: name,
-                    occupatio: occ,
-                    hobbies: hobbies,
-                    vibe: vibe,
-                    reply_style: reply,
-                    convo_style: convo,
-                    social_skills: social,
-                    working_on: work,
-                    final_msg: finalMsg
-                });
-                console.log("Data Saved!");
-            }
-        } catch (e) {
-            console.warn("DB Save Skipped (Offline/Blocker):", e);
+            const element = document.getElementById('cardElement'); // Capture the whole card container
+            const canvas = await html2canvas(element, {
+                backgroundColor: '#ffde59', // Match body bg
+                scale: 2 // High Res
+            });
+
+            canvas.toBlob(async (blob) => {
+                const file = new File([blob], "no-surprises-card.png", { type: "image/png" });
+
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    await navigator.share({
+                        files: [file],
+                        title: 'No Surprises',
+                        text: 'My No Surprises Card'
+                    });
+                } else {
+                    // Fallback Download
+                    const link = document.createElement('a');
+                    link.download = 'my-card.png';
+                    link.href = canvas.toDataURL();
+                    link.click();
+                }
+                shareBtn.innerText = originalText;
+            });
+        } catch (err) {
+            console.error(err);
+            shareBtn.innerText = "ERROR ☹️";
+            setTimeout(() => shareBtn.innerText = originalText, 2000);
         }
     }
 </script>
