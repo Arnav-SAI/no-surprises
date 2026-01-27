@@ -44,14 +44,14 @@
             overflow-y: auto;
         }
 
-        /* LANDING PAGE */
+       
         .landing-content { text-align: center; display: flex; flex-direction: column; gap: 2rem; padding: 1rem 0; }
         .landing-text { font-size: 1.1rem; line-height: 1.8; text-transform: lowercase; }
         .landing-text p { margin-bottom: 1.5rem; }
         .landing-highlight { background: #000; color: #fff; padding: 4px 8px; font-weight: bold; }
         .landing-sub { font-size: 0.9rem; opacity: 0.6; margin-top: -10px; font-weight: bold; }
 
-        /* FOOTER */
+      
         .github-footer { text-align: center; animation: fadeIn 1s ease 0.5s forwards; opacity: 0; }
         .github-btn {
             display: inline-flex; align-items: center; justify-content: center; gap: 10px;
@@ -62,7 +62,7 @@
         .github-btn:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0px #000; background: var(--accent-color); }
         .github-btn svg { width: 20px; height: 20px; fill: currentColor; }
 
-        /* UI ELEMENTS */
+      
         h1 {
             font-size: 1.8rem; margin-top: 0; text-transform: uppercase; font-weight: 700;
             background: var(--accent-color); color: #fff; display: inline-block;
@@ -87,7 +87,7 @@
             box-shadow: 4px 4px 0px #000; transform: translate(-2px, -2px);
         }
 
-        /* CHECKBOXES */
+ 
         .checkbox-group { display: flex; flex-direction: column; gap: 12px; }
         .checkbox-option {
             display: flex; align-items: center; border: 3px solid #000; padding: 12px;
@@ -97,7 +97,7 @@
         .checkbox-option input { margin-right: 15px; height: 20px; width: 20px; accent-color: #000; cursor: pointer; }
         .checkbox-option.selected { background: #000; color: #fff; }
 
-        /* PROGRESS */
+     
         .progress-container { width: 100%; height: 12px; border: 3px solid #000; margin-bottom: 25px; background: #fff; }
         .progress-bar { height: 100%; background: var(--accent-color); width: 0%; transition: width 0.3s ease; }
 
@@ -105,7 +105,7 @@
         .fade-in { animation: fadeIn 0.4s ease; }
         .shake { animation: shake 0.4s ease; }
 
-        /* RESULT CARD */
+        
         #resultCard { text-align: left; }
         .result-header { border-bottom: 3px solid #000; padding-bottom: 1rem; margin-bottom: 1rem; }
         .result-name { font-size: 2.5rem; line-height: 1; font-weight: 900; background: #000; color: #fff; padding: 5px 10px; display: inline-block; margin-bottom: 10px; }
@@ -303,7 +303,7 @@
 </div>
 
 <script>
-    // --- PURE JS NAVIGATION (NO DB BLOCKING) ---
+
     let currentStep = 1;
     const totalSteps = 9;
 
@@ -319,7 +319,7 @@
         document.getElementById('stepCount').innerText = `QUESTION ${currentStep}/${totalSteps}`;
     }
 
-    // Support 'Enter' key for inputs
+   
     document.addEventListener('keydown', function(event) {
         if (event.key === 'Enter') {
             const activeStep = document.querySelector(`.step[data-step="${currentStep}"]`);
@@ -334,14 +334,14 @@
     function nextStep() {
         const currentDiv = document.querySelector(`.step[data-step="${currentStep}"]`);
         
-        // 1. Check Text Input
+ 
         const textInput = currentDiv.querySelector('input[type="text"]');
         if (textInput && textInput.value.trim() === "") {
             shake(textInput);
             return;
         }
 
-        // 2. Check Checkboxes/Radios
+    
         const checkboxes = currentDiv.querySelectorAll('input[type="checkbox"], input[type="radio"]');
         if (checkboxes.length > 0) {
             const isChecked = Array.from(checkboxes).some(cb => cb.checked);
@@ -351,7 +351,7 @@
             }
         }
 
-        // Move to next step
+  
         currentDiv.classList.add('hidden');
         currentDiv.classList.remove('fade-in');
 
@@ -363,7 +363,7 @@
             nextDiv.classList.add('fade-in');
             updateUI();
             
-            // Auto-focus next input if exists
+   
             const nextInput = nextDiv.querySelector('input[type="text"]');
             if(nextInput) setTimeout(() => nextInput.focus(), 100);
         }
@@ -378,7 +378,7 @@
         }, 500);
     }
 
-    // Checkbox Limits (Pick 2)
+
     document.querySelectorAll('.checkbox-group[data-limit]').forEach(group => {
         const limit = parseInt(group.getAttribute('data-limit'));
         const checkboxes = group.querySelectorAll('input[type="checkbox"]');
@@ -392,7 +392,7 @@
         });
     });
 
-    // Visual selection logic
+  
     document.querySelectorAll('.checkbox-option input').forEach(input => {
         input.addEventListener('change', function() {
             if(this.type === 'radio') {
@@ -406,7 +406,6 @@
         });
     });
 
-    // --- SUPABASE & GENERATION (Isolated) ---
     async function generateCard() {
         const finalInput = document.getElementById('finalMsg');
         if(finalInput.value.trim() === "") {
@@ -417,7 +416,7 @@
         const btn = document.querySelector('button[onclick="generateCard()"]');
         btn.innerText = "GENERATING...";
 
-        // Collect Data
+ 
         const name = document.getElementById('name').value;
         const occ = document.getElementById('occupation').value;
         const hobbies = document.getElementById('hobbies').value;
@@ -435,7 +434,7 @@
         const work = getCheckedValues('work');
         const finalMsg = finalInput.value;
 
-        // 1. DISPLAY CARD IMMEDIATELY (UX First)
+     
         document.getElementById('res-name').innerText = name;
         document.getElementById('res-occupation').innerText = occ;
         document.getElementById('res-hobbies').innerText = hobbies;
@@ -451,7 +450,7 @@
         document.getElementById('resultCard').classList.remove('hidden');
         document.getElementById('resultCard').classList.add('fade-in');
 
-        // 2. ATTEMPT SAVE (Silently)
+      
         try {
             const SUPABASE_URL = "https://vhwwantlhvevntkhzjev.supabase.co"; 
             const SUPABASE_KEY = "sb_publishable_vkOakpvu1KvkambRZ_k_LA_pJ6EP-Aa";
