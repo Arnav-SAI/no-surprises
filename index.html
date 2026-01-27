@@ -55,6 +55,34 @@
             overflow-y: auto;
         }
 
+        /* --- LANDING PAGE STYLES --- */
+        .landing-content {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .landing-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            text-transform: lowercase;
+        }
+
+        .landing-highlight {
+            background: #000;
+            color: #fff;
+            padding: 2px 6px;
+            font-weight: bold;
+        }
+
+        .landing-sub {
+            font-size: 0.8rem;
+            opacity: 0.6;
+            margin-top: 10px;
+        }
+
+        /* --- GITHUB FOOTER --- */
         .github-footer {
             text-align: center;
             animation: fadeIn 1s ease 0.5s forwards;
@@ -84,12 +112,9 @@
             background: var(--accent-color);
         }
 
-        .github-btn svg {
-            width: 20px;
-            height: 20px;
-            fill: currentColor;
-        }
+        .github-btn svg { width: 20px; height: 20px; fill: currentColor; }
 
+        /* --- FORM ELEMENTS --- */
         h1 {
             font-size: 1.5rem;
             margin-top: 0;
@@ -152,7 +177,7 @@
             border: 3px solid transparent;
             width: 100%;
             text-transform: uppercase;
-            margin-top: 2rem;
+            margin-top: 1rem;
             position: relative;
             overflow: hidden;
         }
@@ -216,10 +241,11 @@
             transition: width 0.3s ease;
         }
 
-        .hidden { display: none; }
+        .hidden { display: none !important; }
         .fade-in { animation: fadeIn 0.4s ease; }
         .shake { animation: shake 0.4s ease; }
 
+        /* --- FINAL CARD STYLES --- */
         #resultCard { text-align: left; }
         
         .result-header {
@@ -306,6 +332,7 @@
             .result-row { font-size: 0.8rem; margin-bottom: 2px; }
             .final-msg-box { padding: 0.8rem; font-size: 0.9rem; }
             .github-footer { padding-bottom: 20px; }
+            .landing-text { font-size: 0.85rem; }
         }
 
         @keyframes fadeIn {
@@ -326,7 +353,27 @@
 <div class="container">
     <div class="card" id="mainCard">
         
-        <div id="formInterface">
+        <div id="landingPage" class="landing-content fade-in">
+            <h1 style="align-self: center;">No Surprises</h1>
+            
+            <div class="landing-text">
+                <p>you meet someone new.</p>
+                <p>the script starts playing.</p>
+                <p style="font-style: italic; opacity: 0.7;">"what do you do?"<br>"where are you from?"</p>
+                <p>by the third time, it feels like deja vu.</p>
+                <p>so i built a filter.</p>
+                <p>one link that defines your vibe, your style, and your boundaries.</p>
+                <p>no repeating yourself.<br>no wrong impressions.</p>
+                <p class="landing-highlight">send this before you text.</p>
+                <p>the real conversation starts after.</p>
+            </div>
+
+            <button class="btn" onclick="startForm()">MAKE MY CARD</button>
+            <div class="landing-sub">30 seconds • 9 questions • free</div>
+        </div>
+
+
+        <div id="formInterface" class="hidden">
             <div class="progress-container">
                 <div class="progress-bar" id="progressBar"></div>
             </div>
@@ -492,7 +539,6 @@
     // --- SAFETY CHECK INITIALIZATION ---
     let supabase = null;
     try {
-        // Init Supabase if available
         if (typeof window.supabase !== 'undefined') {
             supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
             console.log("Supabase connected!");
@@ -505,6 +551,12 @@
 
     let currentStep = 1;
     const totalSteps = 9;
+
+    function startForm() {
+        document.getElementById('landingPage').style.display = 'none';
+        document.getElementById('formInterface').classList.remove('hidden');
+        document.getElementById('formInterface').classList.add('fade-in');
+    }
 
     function updateUI() {
         const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
@@ -624,10 +676,10 @@
         if (supabase) {
             try {
                 const { error } = await supabase
-                    .from('users') 
+                    .from('users')
                     .insert({ 
-                        name: name, 
-                        occupation: occ, 
+                        name: name,
+                        occupation: occ,
                         hobbies: hobbies,
                         vibe: vibe,
                         reply_style: reply,
