@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>No Surprises - Social Card</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #ffde59; /* Bright Yellow */
+            --bg-color: #ffde59;
             --card-color: #ffffff;
-            --accent-color: #ff5757; /* Hot Red */
+            --accent-color: #ff5757;
             --text-color: #000000;
             --border-width: 4px;
             --shadow-offset: 8px;
@@ -39,7 +40,7 @@
             perspective: 1000px;
             display: flex;
             flex-direction: column;
-            gap: 20px; /* Space between card and footer */
+            gap: 20px;
         }
 
         .card {
@@ -50,15 +51,13 @@
             position: relative;
             transition: all 0.3s ease;
             z-index: 2;
-           
-            max-height: 85vh; 
+            max-height: 85vh;
             overflow-y: auto;
         }
 
-       
         .github-footer {
             text-align: center;
-            animation: fadeIn 1s ease 0.5s forwards; /* Delay fade in */
+            animation: fadeIn 1s ease 0.5s forwards;
             opacity: 0;
         }
 
@@ -91,7 +90,6 @@
             fill: currentColor;
         }
 
-   
         h1 {
             font-size: 1.5rem;
             margin-top: 0;
@@ -222,9 +220,7 @@
         .fade-in { animation: fadeIn 0.4s ease; }
         .shake { animation: shake 0.4s ease; }
 
-        #resultCard {
-            text-align: left;
-        }
+        #resultCard { text-align: left; }
         
         .result-header {
             border-bottom: 3px solid #000;
@@ -275,9 +271,7 @@
             font-size: 0.9rem;
         }
         
-        .result-value {
-            font-weight: bold;
-        }
+        .result-value { font-weight: bold; }
 
         .final-msg-box {
             text-align: center;
@@ -301,59 +295,17 @@
             text-align: center;
         }
 
-        
         @media (max-width: 600px) {
-            body {
-                align-items: flex-start; 
-                padding: 10px;
-                overflow-y: scroll;
-            }
-
-            .container {
-                max-width: 100%;
-            }
-
-            .card {
-                padding: 1rem;
-                box-shadow: 4px 4px 0px #000; 
-                max-height: none; 
-                overflow: visible;
-            }
-
-            .result-header {
-                padding-bottom: 0.5rem;
-                margin-bottom: 0.8rem;
-            }
-
-            .result-name {
-                font-size: 1.8rem; 
-            }
-
-           
-            .result-section {
-                padding: 0.6rem;
-                margin-bottom: 1rem;
-                border-width: 2px;
-            }
-
-            .result-section h3 {
-                margin: -18px 0 5px 0; 
-                font-size: 0.7rem;
-            }
-
-            .result-row {
-                font-size: 0.8rem;
-                margin-bottom: 2px;
-            }
-
-            .final-msg-box {
-                padding: 0.8rem;
-                font-size: 0.9rem;
-            }
-            
-            .github-footer {
-                padding-bottom: 20px;
-            }
+            body { align-items: flex-start; padding: 10px; overflow-y: scroll; }
+            .container { max-width: 100%; }
+            .card { padding: 1rem; box-shadow: 4px 4px 0px #000; max-height: none; overflow: visible; }
+            .result-header { padding-bottom: 0.5rem; margin-bottom: 0.8rem; }
+            .result-name { font-size: 1.8rem; }
+            .result-section { padding: 0.6rem; margin-bottom: 1rem; border-width: 2px; }
+            .result-section h3 { margin: -18px 0 5px 0; font-size: 0.7rem; }
+            .result-row { font-size: 0.8rem; margin-bottom: 2px; }
+            .final-msg-box { padding: 0.8rem; font-size: 0.9rem; }
+            .github-footer { padding-bottom: 20px; }
         }
 
         @keyframes fadeIn {
@@ -533,6 +485,10 @@
 </div>
 
 <script>
+    const SUPABASE_URL = "https://vhwwantlhvevntkhzjev.supabase.co"; 
+    const SUPABASE_KEY = "sb_publishable_vkOakpvu1KvkambRZ_k_LA_pJ6EP-Aa";
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
     let currentStep = 1;
     const totalSteps = 9;
 
@@ -545,14 +501,12 @@
     function nextStep() {
         const currentDiv = document.querySelector(`.step[data-step="${currentStep}"]`);
         
-        // 1. Validate Text
         const textInput = currentDiv.querySelector('input[type="text"]');
         if (textInput && textInput.value.trim() === "") {
             shake(textInput);
             return;
         }
 
-        // 2. Validate Radio/Checkbox
         const checkboxes = currentDiv.querySelectorAll('input[type="checkbox"], input[type="radio"]');
         if (checkboxes.length > 0) {
             const isChecked = Array.from(checkboxes).some(cb => cb.checked);
@@ -562,7 +516,6 @@
             }
         }
 
-        // Transition
         currentDiv.classList.add('hidden');
         currentDiv.classList.remove('fade-in');
 
@@ -587,7 +540,6 @@
         }, 500);
     }
 
-    // Pick 2 Logic
     document.querySelectorAll('.checkbox-group[data-limit]').forEach(group => {
         const limit = parseInt(group.getAttribute('data-limit'));
         const checkboxes = group.querySelectorAll('input[type="checkbox"]');
@@ -606,7 +558,6 @@
         });
     });
 
-    // Funky Selection
     document.querySelectorAll('.checkbox-option input').forEach(input => {
         input.addEventListener('change', function() {
             if(this.type === 'radio') {
@@ -623,12 +574,15 @@
         });
     });
 
-    function generateCard() {
+    async function generateCard() {
         const finalInput = document.getElementById('finalMsg');
         if(finalInput.value.trim() === "") {
             shake(finalInput);
             return;
         }
+
+        const btn = document.querySelector('button[onclick="generateCard()"]');
+        btn.innerText = "GENERATING...";
 
         const name = document.getElementById('name').value;
         const occ = document.getElementById('occupation').value;
@@ -646,6 +600,28 @@
         const social = getCheckedValues('social');
         const work = getCheckedValues('work');
         const finalMsg = finalInput.value;
+
+        if (supabase) {
+            try {
+                const { error } = await supabase
+                    .from('users')
+                    .insert({ 
+                        name: name,
+                        occupation: occ,
+                        hobbies: hobbies,
+                        vibe: vibe,
+                        reply_style: reply,
+                        convo_style: convo,
+                        social_skills: social,
+                        working_on: work,
+                        final_msg: finalMsg
+                    });
+                
+                if(error) console.error(error);
+            } catch(e) {
+                console.error(e);
+            }
+        }
 
         document.getElementById('res-name').innerText = name;
         document.getElementById('res-occupation').innerText = occ;
