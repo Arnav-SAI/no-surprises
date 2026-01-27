@@ -152,7 +152,7 @@
                 <p>the real conversation starts after.</p>
             </div>
             <button class="btn" onclick="startForm()">MAKE MY CARD</button>
-            <div class="landing-sub">• 9 questions • free</div>
+            <div class="landing-sub">30 seconds • 9 questions • free</div>
         </div>
 
         <div id="formInterface" class="hidden">
@@ -335,14 +335,12 @@
     function nextStep() {
         const currentDiv = document.querySelector(`.step[data-step="${currentStep}"]`);
         
-        // 1. Validate Text Input
         const textInput = currentDiv.querySelector('input[type="text"]');
         if (textInput && textInput.value.trim() === "") {
             shake(textInput);
             return;
         }
 
-        // 2. Validate Checkbox/Radio
         const checkboxes = currentDiv.querySelectorAll('input[type="checkbox"], input[type="radio"]');
         if (checkboxes.length > 0) {
             const isChecked = Array.from(checkboxes).some(cb => cb.checked);
@@ -412,7 +410,8 @@
         });
     });
 
-    async function generateCard() {
+    function generateCard() {
+        // 1. Validate Input
         const finalInput = document.getElementById('finalMsg');
         if(finalInput.value.trim() === "") {
             shake(finalInput);
@@ -422,7 +421,7 @@
         const btn = document.querySelector('button[onclick="generateCard()"]');
         btn.innerText = "GENERATING...";
 
-        // Data Collection
+        // 2. GATHER DATA
         const name = document.getElementById('name').value;
         const occ = document.getElementById('occupation').value;
         const hobbies = document.getElementById('hobbies').value;
@@ -440,31 +439,7 @@
         const work = getCheckedValues('work');
         const finalMsg = finalInput.value;
 
-        // --- SUPABASE SAVE (MATCHING YOUR DB NAMES) ---
-        if (supabase) {
-            try {
-                const { error } = await supabase
-                    .from('user') 
-                    .insert({ 
-                        names: name, 
-                        occupatio: occ, 
-                        hobbies: hobbies,
-                        vibe: vibe,
-                        reply_style: reply,
-                        convo_style: convo,
-                        social_skills: social,
-                        working_on: work,
-                        final_msg: finalMsg
-                    });
-                
-                if(error) console.error("Supabase Error:", error);
-                else console.log("Saved to DB!");
-            } catch(e) {
-                console.error("Connection Error:", e);
-            }
-        }
-
-        // Show Result
+        // 3. SHOW CARD IMMEDIATELY (Don't wait for DB)
         document.getElementById('res-name').innerText = name;
         document.getElementById('res-occupation').innerText = occ;
         document.getElementById('res-hobbies').innerText = hobbies;
@@ -478,6 +453,29 @@
         document.getElementById('formInterface').classList.add('hidden'); // Force hide
         document.getElementById('formInterface').style.display = 'none'; // Double assurance
         document.getElementById('resultCard').classList.remove('hidden');
+        document.getElementById('resultCard').classList.add('fade-in');
+
+      
+        if (supabase) {
+            supabase
+                .from('user') 
+                .insert({ 
+                    names: name,
+                    occupatio: occ, 
+                    hobbies: hobbies,
+                    vibe: vibe,
+                    reply_style: reply,
+                    convo_style: convo,
+                    social_skills: social,
+                    working_on: work,
+                    final_msg: finalMsg
+                })
+                .then(response => {
+                    if(response.error) console.error("Supabase Error:", response.error);
+                    else console.log("Saved to DB successfully!");
+                })
+                .catch(err => console.error("Supabase Crash:", err));
+        }
     }
 </script>
 
