@@ -8,9 +8,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,700&display=swap" rel="stylesheet">
     
     <style>
-        /* --- THEME --- */
+        /* --- NEO-BRUTALIST THEME --- */
         :root {
-            --bg: #ffde59; /* Bright Yellow */
+            --bg: #ffde59;
             --white: #ffffff;
             --red: #ff5757;
             --black: #000000;
@@ -36,104 +36,42 @@
 
         .container {
             width: 100%;
-            max-width: 480px; /* Keep it narrow/tall */
+            max-width: 500px;
             margin: 0 auto;
         }
 
-        /* --- CARD --- */
+        /* --- CARD COMPONENT --- */
         .card {
             background: var(--white);
             border: var(--border);
             box-shadow: var(--shadow);
-            padding: 2rem 1.5rem; /* Tighter padding */
+            padding: 2rem;
             position: relative;
             margin-bottom: 20px;
             transition: transform 0.2s;
-            /* Ensure it looks like a tall rectangle, not a square */
-            min-height: 60vh; 
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
         }
 
-        /* --- NEW COMIC STYLE LOGO --- */
-        .comic-header-wrapper {
-            position: relative;
-            text-align: center;
-            margin-bottom: 25px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .comic-burst {
-            position: absolute;
-            width: 280px;
-            height: 120px;
-            background: var(--red);
-            z-index: 0;
-            border: 3px solid var(--black);
-            /* This creates the jagged comic shape */
-            clip-path: polygon(
-                10% 25%, 35% 25%, 35% 0%, 65% 0%, 65% 25%, 90% 25%, 90% 50%, 
-                100% 50%, 100% 100%, 0% 100%, 0% 50%, 10% 50%
-            );
-            /* Alternative "Spiky" Clip Path for more POP */
-            clip-path: polygon(
-                20% 0%, 32% 15%, 45% 0%, 55% 15%, 70% 0%, 80% 15%, 95% 5%, 85% 30%, 
-                100% 35%, 85% 50%, 100% 65%, 85% 70%, 95% 90%, 75% 80%, 60% 95%, 
-                50% 80%, 40% 95%, 25% 80%, 10% 95%, 20% 65%, 0% 60%, 15% 45%, 
-                0% 30%, 15% 20%
-            );
-            transform: rotate(-3deg);
-            box-shadow: 4px 4px 0px rgba(0,0,0,0.2);
-        }
-
+        /* --- TYPOGRAPHY --- */
         h1 {
             font-size: 1.8rem;
             text-transform: uppercase;
+            background: var(--red);
             color: var(--white);
-            position: relative;
-            z-index: 2;
-            margin: 0;
-            padding: 10px;
-            font-style: italic;
-            text-shadow: 3px 3px 0px var(--black);
-            transform: rotate(-3deg);
-        }
-
-        /* --- LANDING PAGE (TIGHTER SPACING) --- */
-        .landing-content {
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem; /* Reduced gap between elements */
-        }
-
-        .landing-text { 
-            line-height: 1.4; /* Reduced from 1.8 */
-            font-size: 1rem; 
-            text-align: center; 
-            letter-spacing: -0.5px; /* Tighter characters */
-        }
-        
-        .landing-text p { margin-bottom: 10px; } /* Less space between paragraphs */
-        
-        .highlight { 
-            background: var(--black); 
-            color: var(--white); 
-            padding: 2px 6px; 
+            padding: 5px 10px;
+            border: var(--border);
+            box-shadow: 3px 3px 0px var(--black);
             display: inline-block;
-            transform: rotate(-1deg);
+            margin: 0 0 20px 0;
         }
 
-        /* --- INPUTS & BUTTONS --- */
-        label { font-size: 1.1rem; font-weight: bold; display: block; margin-bottom: 5px; }
-        .sub-label { font-size: 0.85rem; opacity: 0.6; font-style: italic; margin-bottom: 15px; display: block; }
+        label { font-size: 1.2rem; font-weight: bold; display: block; margin-bottom: 5px; }
+        .sub-label { font-size: 0.9rem; opacity: 0.6; font-style: italic; margin-bottom: 20px; display: block; }
 
+        /* --- INPUTS --- */
         input[type="text"] {
             width: 100%;
-            padding: 12px;
-            font-size: 1rem;
+            padding: 15px;
+            font-size: 1.1rem;
             border: var(--border);
             background: #f4f4f4;
             outline: none;
@@ -141,6 +79,7 @@
         }
         input[type="text"]:focus { background: var(--white); box-shadow: 4px 4px 0px var(--black); }
 
+        /* --- BUTTONS --- */
         .btn {
             background: var(--black);
             color: var(--white);
@@ -151,9 +90,8 @@
             font-weight: bold;
             text-transform: uppercase;
             cursor: pointer;
-            margin-top: 15px;
+            margin-top: 20px;
             border: 3px solid transparent;
-            transition: 0.1s;
         }
         .btn:active { transform: translate(2px, 2px); }
 
@@ -162,21 +100,20 @@
             display: flex;
             align-items: center;
             border: var(--border);
-            padding: 10px;
-            margin-bottom: 8px; /* Tighter list */
+            padding: 12px;
+            margin-bottom: 10px;
             cursor: pointer;
             background: var(--white);
             font-weight: bold;
-            font-size: 0.9rem;
         }
         .option:hover { background: var(--bg); }
         .option.selected { background: var(--black); color: var(--white); }
-        .option input { margin-right: 12px; width: 18px; height: 18px; accent-color: var(--black); }
+        .option input { margin-right: 15px; width: 20px; height: 20px; accent-color: var(--black); }
 
         /* --- PROGRESS BAR --- */
-        .progress-box { width: 100%; height: 10px; border: var(--border); background: var(--white); margin-bottom: 8px; }
+        .progress-box { width: 100%; height: 12px; border: var(--border); background: var(--white); margin-bottom: 10px; }
         .progress-fill { height: 100%; background: var(--red); width: 0%; transition: width 0.3s; }
-        .step-count { text-align: right; font-weight: bold; font-size: 0.75rem; margin-bottom: 15px; display: block; }
+        .step-count { text-align: right; font-weight: bold; font-size: 0.8rem; margin-bottom: 20px; display: block; }
 
         /* --- SCREENS --- */
         .hidden { display: none !important; }
@@ -185,306 +122,14 @@
         .shake { animation: shake 0.4s ease; }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
 
+        /* --- LANDING PAGE --- */
+        .landing-text { line-height: 1.6; font-size: 1rem; text-align: center; }
+        .landing-text p { margin-bottom: 15px; }
+        .highlight { background: var(--black); color: var(--white); padding: 2px 6px; }
+
         /* --- RESULT CARD --- */
-        .res-header { border-bottom: var(--border); padding-bottom: 10px; margin-bottom: 15px; }
-        .res-name { font-size: 2.2rem; background: var(--black); color: var(--white); padding: 5px 10px; display: inline-block; margin-bottom: 5px; }
-        .res-sub { font-style: italic; font-size: 0.9rem; line-height: 1.4; }
-        
-        .res-box { border: var(--border); padding: 12px; margin-bottom: 15px; position: relative; background: #fafafa; }
+        .res-header { border-bottom: var(--border); padding-bottom: 15px; margin-bottom: 15px; }
+        .res-name { font-size: 2.5rem; background: var(--black); color: var(--white); padding: 5px; display: inline-block; }
+        .res-box { border: var(--border); padding: 15px; margin-bottom: 15px; position: relative; background: #fafafa; }
         .res-label { 
-            position: absolute; top: -10px; left: 10px; 
-            background: var(--red); color: var(--white); 
-            padding: 2px 6px; font-size: 0.65rem; border: var(--border); 
-            text-transform: uppercase; font-weight: bold;
-        }
-        .res-row { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 4px; }
-        .res-val { font-weight: bold; }
-        
-        .final-box { 
-            border: 2px dashed var(--black); padding: 15px; 
-            text-align: center; background: var(--bg); font-weight: bold;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="container">
-        
-        <div class="card">
-            
-            <div id="landing" class="landing-content">
-                
-                <div class="comic-header-wrapper">
-                    <div class="comic-burst"></div>
-                    <h1>No Surprises</h1>
-                </div>
-
-                <div class="landing-text">
-                    <p>you meet someone new.</p>
-                    <p>the script starts playing.</p>
-                    <p style="opacity: 0.6;">"what do you do?"<br>"where are you from?"</p>
-                    <p>by the third time, it feels like deja vu.</p>
-                    <p>so i made a filter.</p>
-                    <p>one link that defines your vibe,<br> your style, and your boundaries.</p>
-                    <p>no repeating yourself.</p>
-                    <p><span class="highlight">send this before you text.</span></p>
-                    <p>the real conversation starts after.</p>
-                </div>
-
-                <button class="btn" onclick="start()">MAKE MY CARD</button>
-                <div style="text-align: center; font-size: 0.8rem; font-weight: bold; opacity: 0.5; margin-top: -10px;">30s</div>
-            </div>
-
-            <div id="wizard" class="hidden">
-                <div class="progress-box"><div class="progress-fill" id="bar"></div></div>
-                <span class="step-count" id="count">QUESTION 1/9</span>
-
-                <div class="step" data-step="1">
-                    <label>1 → What's your name?</label>
-                    <span class="sub-label">just first name</span>
-                    <input type="text" id="name" placeholder="type here...">
-                    <button class="btn" onclick="next()">NEXT</button>
-                </div>
-
-                <div class="step hidden" data-step="2">
-                    <label>2 → What do you do?</label>
-                    <span class="sub-label">school / college / work?</span>
-                    <input type="text" id="occ" placeholder="e.g. stanford cs...">
-                    <button class="btn" onclick="next()">NEXT</button>
-                </div>
-
-                <div class="step hidden" data-step="3">
-                    <label>3 → What do you do for fun?</label>
-                    <span class="sub-label">hobbies that actually matter</span>
-                    <input type="text" id="hobby" placeholder="type here...">
-                    <button class="btn" onclick="next()">NEXT</button>
-                </div>
-
-                <div class="step hidden" data-step="4">
-                    <label>4 → Current life vibe?</label>
-                    <div class="option" onclick="sel(this, 'vibe')"><input type="radio" name="vibe" value="building myself">building myself</div>
-                    <div class="option" onclick="sel(this, 'vibe')"><input type="radio" name="vibe" value="studying / working">studying / working</div>
-                    <div class="option" onclick="sel(this, 'vibe')"><input type="radio" name="vibe" value="chilling">chilling & observing</div>
-                    <div class="option" onclick="sel(this, 'vibe')"><input type="radio" name="vibe" value="figuring it out">figuring stuff out</div>
-                    <div class="option" onclick="sel(this, 'vibe')"><input type="radio" name="vibe" value="explain later">explain later</div>
-                    <button class="btn" onclick="next()">NEXT</button>
-                </div>
-
-                <div class="step hidden" data-step="5">
-                    <label>5 → Reply style?</label>
-                    <div class="option" onclick="sel(this, 'reply')"><input type="radio" name="reply" value="fast">⚡ fast</div>
-                    <div class="option" onclick="sel(this, 'reply')"><input type="radio" name="reply" value="normal">🙂 normal</div>
-                    <div class="option" onclick="sel(this, 'reply')"><input type="radio" name="reply" value="slow">🐢 slow</div>
-                    <div class="option" onclick="sel(this, 'reply')"><input type="radio" name="reply" value="in batches">📦 in batches</div>
-                    <div class="option" onclick="sel(this, 'reply')"><input type="radio" name="reply" value="depends">😏 depends</div>
-                    <button class="btn" onclick="next()">NEXT</button>
-                </div>
-
-                <div class="step hidden" data-step="6" data-limit="2">
-                    <label>6 → Conversation style? (Pick 2)</label>
-                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="funny">funny</div>
-                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="thoughtful">thoughtful</div>
-                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="chill">chill</div>
-                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="chaotic">chaotic good</div>
-                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="sarcastic">sarcastic</div>
-                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="dry">dry but loyal</div>
-                    <button class="btn" onclick="next()">NEXT</button>
-                </div>
-
-                <div class="step hidden" data-step="7" data-limit="2">
-                    <label>7 → Good at socially? (Pick 2)</label>
-                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="questions">asking questions</div>
-                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="listening">listening</div>
-                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="energy">matching energy</div>
-                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="recs">giving recs</div>
-                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="comfort">making ppl comfortable</div>
-                    <button class="btn" onclick="next()">NEXT</button>
-                </div>
-
-                <div class="step hidden" data-step="8" data-limit="2">
-                    <label>8 → Working on? (Pick 1-2)</label>
-                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="starting">starting convos</div>
-                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="replying">replying faster</div>
-                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="feelings">feelings</div>
-                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="hints">taking hints</div>
-                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="opening">opening up</div>
-                    <button class="btn" onclick="next()">NEXT</button>
-                </div>
-
-                <div class="step hidden" data-step="9">
-                    <label>9 → Before you text me...</label>
-                    <input type="text" id="final" placeholder="set expectations...">
-                    <button class="btn" onclick="finish()">GENERATE CARD 🚀</button>
-                </div>
-            </div>
-
-            <div id="result" class="hidden">
-                <div class="res-header">
-                    <div class="res-name" id="r-name">NAME</div>
-                    <div class="res-sub" id="r-occ">Occupation</div>
-                    <div class="res-sub" id="r-hob">Hobbies</div>
-                </div>
-
-                <div class="res-box">
-                    <div class="res-label">The Vibe</div>
-                    <div class="res-row"><span>Current Era:</span> <span class="res-val" id="r-vibe">...</span></div>
-                    <div class="res-row"><span>Reply Style:</span> <span class="res-val" id="r-reply">...</span></div>
-                </div>
-
-                <div class="res-box">
-                    <div class="res-label">Style</div>
-                    <div class="res-val" id="r-convo">...</div>
-                </div>
-
-                <div class="res-box">
-                    <div class="res-label">I Bring</div>
-                    <div class="res-val" id="r-social">...</div>
-                </div>
-
-                <div class="res-box">
-                    <div class="res-label">Working On</div>
-                    <div class="res-val" id="r-work">...</div>
-                </div>
-
-                <div class="final-box" id="r-final">...</div>
-                
-                <button class="btn" style="background:transparent; color:#000; text-decoration:underline; border:none;" onclick="location.reload()">Make your own ↺</button>
-            </div>
-
-        </div>
-    </div>
-
-<script>
-    // --- DATABASE CONFIG ---
-    const DB_URL = "https://vhwwantlhvevntkhzjev.supabase.co";
-    const DB_KEY = "sb_publishable_vkOakpvu1KvkambRZ_k_LA_pJ6EP-Aa";
-    
-    let db = null;
-    try {
-        if(window.supabase) db = window.supabase.createClient(DB_URL, DB_KEY);
-    } catch(e) { console.log("DB Offline"); }
-
-    // --- STATE ---
-    let step = 1;
-    const total = 9;
-    const data = {};
-
-    function start() {
-        document.getElementById('landing').classList.add('hidden');
-        document.getElementById('wizard').classList.remove('hidden');
-        document.getElementById('wizard').classList.add('fade-in');
-    }
-
-    // --- INPUT HANDLERS ---
-    function sel(el, key) {
-        // Clear others
-        const sibs = el.parentElement.querySelectorAll('.option');
-        sibs.forEach(s => {
-            s.classList.remove('selected');
-            s.querySelector('input').checked = false;
-        });
-        // Select this
-        el.classList.add('selected');
-        el.querySelector('input').checked = true;
-    }
-
-    function toggle(el) {
-        const input = el.querySelector('input');
-        const parent = el.closest('.step');
-        const limit = parseInt(parent.getAttribute('data-limit') || 10);
-        const checked = parent.querySelectorAll('input:checked').length;
-
-        if(!input.checked && checked >= limit) return; // Limit reached
-
-        input.checked = !input.checked;
-        if(input.checked) el.classList.add('selected');
-        else el.classList.remove('selected');
-    }
-
-    // --- NAVIGATION ---
-    function next() {
-        const div = document.querySelector(`.step[data-step="${step}"]`);
-        
-        // Validation
-        const txt = div.querySelector('input[type="text"]');
-        if(txt && txt.value.trim() === "") { shake(txt); return; }
-
-        const opts = div.querySelectorAll('input[type="radio"], input[type="checkbox"]');
-        if(opts.length > 0) {
-            const hasCheck = Array.from(opts).some(i => i.checked);
-            if(!hasCheck) { shake(div.querySelector('.btn')); return; }
-        }
-
-        // Store Data
-        if(txt) {
-            if(step === 1) data.name = txt.value;
-            if(step === 2) data.occ = txt.value;
-            if(step === 3) data.hob = txt.value;
-            if(step === 9) data.final = txt.value;
-        } else {
-            const checked = Array.from(div.querySelectorAll('input:checked')).map(i => i.value);
-            if(step === 4) data.vibe = checked[0];
-            if(step === 5) data.reply = checked[0];
-            if(step === 6) data.convo = checked.join(" + ");
-            if(step === 7) data.social = checked.join(" + ");
-            if(step === 8) data.work = checked.join(" + ");
-        }
-
-        // Move
-        div.classList.add('hidden');
-        step++;
-        const nextDiv = document.querySelector(`.step[data-step="${step}"]`);
-        nextDiv.classList.remove('hidden');
-        nextDiv.classList.add('fade-in');
-        
-        // Update Bar
-        document.getElementById('bar').style.width = ((step-1)/(total-1))*100 + "%";
-        document.getElementById('count').innerText = `QUESTION ${step}/${total}`;
-    }
-
-    function shake(el) {
-        el.style.borderColor = "red";
-        el.classList.add('shake');
-        setTimeout(() => { el.classList.remove('shake'); el.style.borderColor = "black"; }, 500);
-    }
-
-    // --- FINISH ---
-    async function finish() {
-        const txt = document.getElementById('final');
-        if(txt.value.trim() === "") { shake(txt); return; }
-        data.final = txt.value;
-
-        // Render Card
-        document.getElementById('r-name').innerText = data.name;
-        document.getElementById('r-occ').innerText = data.occ;
-        document.getElementById('r-hob').innerText = data.hob;
-        document.getElementById('r-vibe').innerText = data.vibe;
-        document.getElementById('r-reply').innerText = data.reply;
-        document.getElementById('r-convo').innerText = data.convo;
-        document.getElementById('r-social').innerText = data.social;
-        document.getElementById('r-work').innerText = data.work;
-        document.getElementById('r-final').innerText = `"${data.final}"`;
-
-        document.getElementById('wizard').classList.add('hidden');
-        document.getElementById('result').classList.remove('hidden');
-        document.getElementById('result').classList.add('fade-in');
-
-        // Save to DB (Silent)
-        if(db) {
-            await db.from('user').insert({
-                names: data.name,
-                occupatio: data.occ,
-                hobbies: data.hob,
-                vibe: data.vibe,
-                reply_style: data.reply,
-                convo_style: data.convo,
-                social_skills: data.social,
-                working_on: data.work,
-                final_msg: data.final
-            });
-        }
-    }
-</script>
-
-</body>
-</html>
+            position: absolute; top: -12px; left: 10px;
