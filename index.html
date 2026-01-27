@@ -338,21 +338,21 @@
                     <label>1 → What's your name?</label>
                     <span class="sub-label">just first name</span>
                     <input type="text" id="name" placeholder="type here..." required>
-                    <button class="btn" onclick="nextStep()">Next</button>
+                    <button class="btn" type="button" onclick="nextStep()">Next</button>
                 </div>
 
                 <div class="step hidden" data-step="2">
                     <label>2 → What do you do?</label>
                     <span class="sub-label">which school/college/work? major/job?</span>
                     <input type="text" id="occupation" placeholder="e.g. stanford cs major..." required>
-                    <button class="btn" onclick="nextStep()">Next</button>
+                    <button class="btn" type="button" onclick="nextStep()">Next</button>
                 </div>
 
                 <div class="step hidden" data-step="3">
                     <label>3 → What do you do for fun?</label>
                     <span class="sub-label">hobbies, interests, things that matter</span>
                     <input type="text" id="hobbies" placeholder="type here..." required>
-                    <button class="btn" onclick="nextStep()">Next</button>
+                    <button class="btn" type="button" onclick="nextStep()">Next</button>
                 </div>
 
                 <div class="step hidden" data-step="4">
@@ -365,7 +365,7 @@
                         <label class="checkbox-option"><input type="radio" name="vibe" value="figuring stuff out"> 🧩 Figuring stuff out</label>
                         <label class="checkbox-option"><input type="radio" name="vibe" value="explain later"> 🤫 I'll explain when we talk</label>
                     </div>
-                    <button class="btn" onclick="nextStep()">Next</button>
+                    <button class="btn" type="button" onclick="nextStep()">Next</button>
                 </div>
 
                 <div class="step hidden" data-step="5">
@@ -378,7 +378,7 @@
                         <label class="checkbox-option"><input type="radio" name="reply" value="in batches"> 📦 I reply in batches</label>
                         <label class="checkbox-option"><input type="radio" name="reply" value="depends"> 😏 Depends how much I like you</label>
                     </div>
-                    <button class="btn" onclick="nextStep()">Next</button>
+                    <button class="btn" type="button" onclick="nextStep()">Next</button>
                 </div>
 
                 <div class="step hidden" data-step="6">
@@ -392,7 +392,7 @@
                         <label class="checkbox-option"><input type="checkbox" name="convo" value="sarcastic but soft"> 🙃 Sarcastic but soft</label>
                         <label class="checkbox-option"><input type="checkbox" name="convo" value="dry but loyal"> 🌵 Dry but loyal</label>
                     </div>
-                    <button class="btn" onclick="nextStep()">Next</button>
+                    <button class="btn" type="button" onclick="nextStep()">Next</button>
                 </div>
 
                 <div class="step hidden" data-step="7">
@@ -406,7 +406,7 @@
                         <label class="checkbox-option"><input type="checkbox" name="social" value="recs"> 🎵 Giving good recs</label>
                         <label class="checkbox-option"><input type="checkbox" name="social" value="comfort"> 🛋️ Making people feel comfortable</label>
                     </div>
-                    <button class="btn" onclick="nextStep()">Next</button>
+                    <button class="btn" type="button" onclick="nextStep()">Next</button>
                 </div>
 
                 <div class="step hidden" data-step="8">
@@ -420,14 +420,14 @@
                         <label class="checkbox-option"><input type="checkbox" name="work" value="dry streaks"> 💧 Ending dry streaks</label>
                         <label class="checkbox-option"><input type="checkbox" name="work" value="opening up"> 🔓 Opening up quickly</label>
                     </div>
-                    <button class="btn" onclick="nextStep()">Next</button>
+                    <button class="btn" type="button" onclick="nextStep()">Next</button>
                 </div>
 
                 <div class="step hidden" data-step="9">
                     <label>9 → Before you text me...</label>
                     <span class="sub-label">anything they should know? set expectations</span>
                     <input type="text" id="finalMsg" placeholder="type here..." required>
-                    <button class="btn" onclick="generateCard()">GENERATE CARD 🚀</button>
+                    <button class="btn" type="button" onclick="generateCard()">GENERATE CARD 🚀</button>
                 </div>
             </form>
         </div>
@@ -485,16 +485,19 @@
 </div>
 
 <script>
+    // --- SUPABASE CONFIGURATION ---
     const SUPABASE_URL = "https://vhwwantlhvevntkhzjev.supabase.co"; 
     const SUPABASE_KEY = "sb_publishable_vkOakpvu1KvkambRZ_k_LA_pJ6EP-Aa";
 
-    // Initialize Supabase Safely
+    // --- SAFETY CHECK INITIALIZATION ---
     let supabase = null;
     try {
-        if (window.supabase) {
+        // Init Supabase if available
+        if (typeof window.supabase !== 'undefined') {
             supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            console.log("Supabase connected!");
         } else {
-            console.warn("Supabase library not loaded. Form will work without saving data.");
+            console.warn("Supabase library not found. Running in offline mode.");
         }
     } catch (err) {
         console.warn("Supabase failed to initialize:", err);
@@ -512,6 +515,7 @@
     function nextStep() {
         const currentDiv = document.querySelector(`.step[data-step="${currentStep}"]`);
         
+        // Validation
         const textInput = currentDiv.querySelector('input[type="text"]');
         if (textInput && textInput.value.trim() === "") {
             shake(textInput);
@@ -527,6 +531,7 @@
             }
         }
 
+        // Transition
         currentDiv.classList.add('hidden');
         currentDiv.classList.remove('fade-in');
 
@@ -551,6 +556,7 @@
         }, 500);
     }
 
+    // Pick 2 Logic
     document.querySelectorAll('.checkbox-group[data-limit]').forEach(group => {
         const limit = parseInt(group.getAttribute('data-limit'));
         const checkboxes = group.querySelectorAll('input[type="checkbox"]');
@@ -569,6 +575,7 @@
         });
     });
 
+    // Funky Selection
     document.querySelectorAll('.checkbox-option input').forEach(input => {
         input.addEventListener('change', function() {
             if(this.type === 'radio') {
@@ -595,6 +602,7 @@
         const btn = document.querySelector('button[onclick="generateCard()"]');
         btn.innerText = "GENERATING...";
 
+        // Gather Data
         const name = document.getElementById('name').value;
         const occ = document.getElementById('occupation').value;
         const hobbies = document.getElementById('hobbies').value;
@@ -612,13 +620,14 @@
         const work = getCheckedValues('work');
         const finalMsg = finalInput.value;
 
+        // Try to Save (Fail Silently if Error)
         if (supabase) {
             try {
                 const { error } = await supabase
-                    .from('users')
+                    .from('users') 
                     .insert({ 
-                        name: name,
-                        occupation: occ,
+                        name: name, 
+                        occupation: occ, 
                         hobbies: hobbies,
                         vibe: vibe,
                         reply_style: reply,
@@ -629,11 +638,13 @@
                     });
                 
                 if(error) console.error("Supabase Save Error:", error);
+                else console.log("Data saved successfully!");
             } catch(e) {
                 console.error("Connection Error:", e);
             }
         }
 
+        // Show Result
         document.getElementById('res-name').innerText = name;
         document.getElementById('res-occupation').innerText = occ;
         document.getElementById('res-hobbies').innerText = hobbies;
