@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Textationships - Funky Clone</title>
+    <title>No Surprises - Social Card</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -437,25 +437,22 @@
     const totalSteps = 9;
 
     function updateUI() {
-        // Update Progress Bar
         const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
         document.getElementById('progressBar').style.width = `${progress}%`;
-        
-        // Update Text
         document.getElementById('stepCount').innerText = `QUESTION ${currentStep}/${totalSteps}`;
     }
 
     function nextStep() {
         const currentDiv = document.querySelector(`.step[data-step="${currentStep}"]`);
         
-        // 1. Validate Text Inputs
+        // 1. Validate Text
         const textInput = currentDiv.querySelector('input[type="text"]');
         if (textInput && textInput.value.trim() === "") {
             shake(textInput);
             return;
         }
 
-        // 2. Validate Radio/Checkbox Selections
+        // 2. Validate Radio/Checkbox
         const checkboxes = currentDiv.querySelectorAll('input[type="checkbox"], input[type="radio"]');
         if (checkboxes.length > 0) {
             const isChecked = Array.from(checkboxes).some(cb => cb.checked);
@@ -465,12 +462,7 @@
             }
         }
 
-        // Proceed
-        transitionToNext();
-    }
-
-    function transitionToNext() {
-        const currentDiv = document.querySelector(`.step[data-step="${currentStep}"]`);
+        // Transition
         currentDiv.classList.add('hidden');
         currentDiv.classList.remove('fade-in');
 
@@ -478,9 +470,11 @@
 
         if (currentStep <= totalSteps) {
             const nextDiv = document.querySelector(`.step[data-step="${currentStep}"]`);
-            nextDiv.classList.remove('hidden');
-            nextDiv.classList.add('fade-in');
-            updateUI();
+            if (nextDiv) {
+                nextDiv.classList.remove('hidden');
+                nextDiv.classList.add('fade-in');
+                updateUI();
+            }
         }
     }
 
@@ -489,11 +483,11 @@
         element.classList.add('shake');
         setTimeout(() => {
             element.classList.remove('shake');
-            element.style.borderColor = "#000"; // Reset border
+            element.style.borderColor = "#000"; 
         }, 500);
     }
 
-    // --- ENFORCE "PICK 2" LIMITS ---
+    // Pick 2 Logic
     document.querySelectorAll('.checkbox-group[data-limit]').forEach(group => {
         const limit = parseInt(group.getAttribute('data-limit'));
         const checkboxes = group.querySelectorAll('input[type="checkbox"]');
@@ -512,7 +506,7 @@
         });
     });
 
-    // --- VISUAL SELECTION FOR FUNKY UI ---
+    // Funky Selection
     document.querySelectorAll('.checkbox-option input').forEach(input => {
         input.addEventListener('change', function() {
             if(this.type === 'radio') {
@@ -529,7 +523,6 @@
         });
     });
 
-    // --- GENERATE THE CARD ---
     function generateCard() {
         const finalInput = document.getElementById('finalMsg');
         if(finalInput.value.trim() === "") {
@@ -537,14 +530,12 @@
             return;
         }
 
-        // 1. Gather Data
         const name = document.getElementById('name').value;
         const occ = document.getElementById('occupation').value;
         const hobbies = document.getElementById('hobbies').value;
         const vibe = document.querySelector('input[name="vibe"]:checked').value;
         const reply = document.querySelector('input[name="reply"]:checked').value;
         
-        // Helper for checkboxes
         const getCheckedValues = (name) => {
             return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`))
                         .map(cb => cb.value)
@@ -556,7 +547,6 @@
         const work = getCheckedValues('work');
         const finalMsg = finalInput.value;
 
-        // 2. Populate Card
         document.getElementById('res-name').innerText = name;
         document.getElementById('res-occupation').innerText = occ;
         document.getElementById('res-hobbies').innerText = hobbies;
@@ -567,11 +557,9 @@
         document.getElementById('res-work').innerText = work;
         document.getElementById('res-final').innerText = `"${finalMsg}"`;
 
-        // 3. Swap Views
         document.getElementById('formInterface').style.display = 'none';
         document.getElementById('resultCard').classList.remove('hidden');
     }
-
 </script>
 
 </body>
