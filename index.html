@@ -165,21 +165,21 @@
                 <div class="step fade-in" data-step="1">
                     <label>1 → What's your name?</label>
                     <span class="sub-label">just first name</span>
-                    <input type="text" id="name" placeholder="type here..." required>
+                    <input type="text" id="name" placeholder="type here..." required onkeypress="handleEnter(event)">
                     <button class="btn" type="button" onclick="nextStep()">Next</button>
                 </div>
 
                 <div class="step hidden" data-step="2">
                     <label>2 → What do you do?</label>
                     <span class="sub-label">which school/college/work? major/job?</span>
-                    <input type="text" id="occupation" placeholder="e.g. stanford cs major..." required>
+                    <input type="text" id="occupation" placeholder="e.g. stanford cs major..." required onkeypress="handleEnter(event)">
                     <button class="btn" type="button" onclick="nextStep()">Next</button>
                 </div>
 
                 <div class="step hidden" data-step="3">
                     <label>3 → What do you do for fun?</label>
                     <span class="sub-label">hobbies, interests, things that matter</span>
-                    <input type="text" id="hobbies" placeholder="type here..." required>
+                    <input type="text" id="hobbies" placeholder="type here..." required onkeypress="handleEnter(event)">
                     <button class="btn" type="button" onclick="nextStep()">Next</button>
                 </div>
 
@@ -254,7 +254,7 @@
                 <div class="step hidden" data-step="9">
                     <label>9 → Before you text me...</label>
                     <span class="sub-label">anything they should know? set expectations</span>
-                    <input type="text" id="finalMsg" placeholder="type here..." required>
+                    <input type="text" id="finalMsg" placeholder="type here..." required onkeypress="handleEnter(event)">
                     <button class="btn" type="button" onclick="generateCard()">GENERATE CARD 🚀</button>
                 </div>
             </form>
@@ -300,30 +300,15 @@
 </div>
 
 <script>
-    // --- SUPABASE CONFIGURATION ---
-    const SUPABASE_URL = "https://vhwwantlhvevntkhzjev.supabase.co"; 
-    const SUPABASE_KEY = "sb_publishable_vkOakpvu1KvkambRZ_k_LA_pJ6EP-Aa";
-
-    // --- SAFETY CHECK INITIALIZATION ---
-    let supabase = null;
-    try {
-        if (typeof window.supabase !== 'undefined') {
-            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-            console.log("Supabase connected!");
-        } else {
-            console.warn("Supabase library not found. Running in offline mode.");
-        }
-    } catch (err) {
-        console.warn("Supabase failed to initialize:", err);
-    }
-
+    // --- 1. UI LOGIC (THIS RUNS FIRST) ---
     let currentStep = 1;
     const totalSteps = 9;
 
     function startForm() {
         document.getElementById('landingPage').style.display = 'none';
-        document.getElementById('formInterface').classList.remove('hidden');
-        document.getElementById('formInterface').classList.add('fade-in');
+        const form = document.getElementById('formInterface');
+        form.classList.remove('hidden');
+        form.classList.add('fade-in');
     }
 
     function updateUI() {
@@ -332,9 +317,18 @@
         document.getElementById('stepCount').innerText = `QUESTION ${currentStep}/${totalSteps}`;
     }
 
+    function handleEnter(e) {
+        if(e.key === "Enter") {
+            e.preventDefault(); // Stop form submit
+            if(currentStep < totalSteps) nextStep();
+            else generateCard();
+        }
+    }
+
     function nextStep() {
         const currentDiv = document.querySelector(`.step[data-step="${currentStep}"]`);
         
+        // Validation
         const textInput = currentDiv.querySelector('input[type="text"]');
         if (textInput && textInput.value.trim() === "") {
             shake(textInput);
@@ -350,6 +344,7 @@
             }
         }
 
+        // Move to next
         currentDiv.classList.add('hidden');
         currentDiv.classList.remove('fade-in');
 
@@ -361,6 +356,9 @@
                 nextDiv.classList.remove('hidden');
                 nextDiv.classList.add('fade-in');
                 updateUI();
+                // Focus next input if exists
+                const nextInput = nextDiv.querySelector('input[type="text"]');
+                if(nextInput) nextInput.focus();
             }
         }
     }
@@ -374,44 +372,20 @@
         }, 500);
     }
 
-    // Pick 2 Logic
-    document.querySelectorAll('.checkbox-group[data-limit]').forEach(group => {
-        const limit = parseInt(group.getAttribute('data-limit'));
-        const checkboxes = group.querySelectorAll('input[type="checkbox"]');
+    // --- 2. SUPABASE LOGIC (RUNS SAFELY) ---
+    const SUPABASE_URL = "https://vhwwantlhvevntkhzjev.supabase.co"; 
+    const SUPABASE_KEY = "sb_publishable_vkOakpvu1KvkambRZ_k_LA_pJ6EP-Aa";
+    
+    let supabase = null;
+    try {
+        if (typeof window.supabase !== 'undefined') {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        }
+    } catch (err) {
+        console.warn("Supabase load error:", err);
+    }
 
-        checkboxes.forEach(cb => {
-            cb.addEventListener('change', () => {
-                const checkedCount = Array.from(checkboxes).filter(c => c.checked).length;
-                if (checkedCount >= limit) {
-                    checkboxes.forEach(c => {
-                        if (!c.checked) c.disabled = true;
-                    });
-                } else {
-                    checkboxes.forEach(c => c.disabled = false);
-                }
-            });
-        });
-    });
-
-    // Selection Styling
-    document.querySelectorAll('.checkbox-option input').forEach(input => {
-        input.addEventListener('change', function() {
-            if(this.type === 'radio') {
-                const name = this.name;
-                document.querySelectorAll(`input[name="${name}"]`).forEach(rad => {
-                    rad.closest('.checkbox-option').classList.remove('selected');
-                });
-            }
-            if(this.checked) {
-                this.closest('.checkbox-option').classList.add('selected');
-            } else {
-                this.closest('.checkbox-option').classList.remove('selected');
-            }
-        });
-    });
-
-    function generateCard() {
-        // 1. Validate Input
+    async function generateCard() {
         const finalInput = document.getElementById('finalMsg');
         if(finalInput.value.trim() === "") {
             shake(finalInput);
@@ -421,7 +395,7 @@
         const btn = document.querySelector('button[onclick="generateCard()"]');
         btn.innerText = "GENERATING...";
 
-        // 2. GATHER DATA
+        // Collect Data
         const name = document.getElementById('name').value;
         const occ = document.getElementById('occupation').value;
         const hobbies = document.getElementById('hobbies').value;
@@ -439,7 +413,26 @@
         const work = getCheckedValues('work');
         const finalMsg = finalInput.value;
 
-        // 3. SHOW CARD IMMEDIATELY (Don't wait for DB)
+        // Try Save (Silent Fail)
+        if (supabase) {
+            supabase
+                .from('user') // Matches your table 'user'
+                .insert({ 
+                    names: name, // Matches your column 'names'
+                    occupatio: occ, // Matches your column 'occupatio'
+                    hobbies: hobbies,
+                    vibe: vibe,
+                    reply_style: reply,
+                    convo_style: convo,
+                    social_skills: social,
+                    working_on: work,
+                    final_msg: finalMsg
+                })
+                .then(res => console.log("Saved"))
+                .catch(err => console.log("Save error", err));
+        }
+
+        // Show UI Immediately
         document.getElementById('res-name').innerText = name;
         document.getElementById('res-occupation').innerText = occ;
         document.getElementById('res-hobbies').innerText = hobbies;
@@ -450,33 +443,38 @@
         document.getElementById('res-work').innerText = work;
         document.getElementById('res-final').innerText = `"${finalMsg}"`;
 
-        document.getElementById('formInterface').classList.add('hidden'); // Force hide
-        document.getElementById('formInterface').style.display = 'none'; // Double assurance
+        document.getElementById('formInterface').classList.add('hidden');
+        document.getElementById('formInterface').style.display = 'none';
         document.getElementById('resultCard').classList.remove('hidden');
         document.getElementById('resultCard').classList.add('fade-in');
-
-      
-        if (supabase) {
-            supabase
-                .from('user') 
-                .insert({ 
-                    names: name,
-                    occupatio: occ, 
-                    hobbies: hobbies,
-                    vibe: vibe,
-                    reply_style: reply,
-                    convo_style: convo,
-                    social_skills: social,
-                    working_on: work,
-                    final_msg: finalMsg
-                })
-                .then(response => {
-                    if(response.error) console.error("Supabase Error:", response.error);
-                    else console.log("Saved to DB successfully!");
-                })
-                .catch(err => console.error("Supabase Crash:", err));
-        }
     }
+
+    // --- 3. EVENT LISTENERS ---
+    document.querySelectorAll('.checkbox-group[data-limit]').forEach(group => {
+        const limit = parseInt(group.getAttribute('data-limit'));
+        const checkboxes = group.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', () => {
+                const checkedCount = Array.from(checkboxes).filter(c => c.checked).length;
+                checkboxes.forEach(c => {
+                    if (!c.checked) c.disabled = checkedCount >= limit;
+                });
+            });
+        });
+    });
+
+    document.querySelectorAll('.checkbox-option input').forEach(input => {
+        input.addEventListener('change', function() {
+            if(this.type === 'radio') {
+                const name = this.name;
+                document.querySelectorAll(`input[name="${name}"]`).forEach(rad => {
+                    rad.closest('.checkbox-option').classList.remove('selected');
+                });
+            }
+            if(this.checked) this.closest('.checkbox-option').classList.add('selected');
+            else this.closest('.checkbox-option').classList.remove('selected');
+        });
+    });
 </script>
 
 </body>
