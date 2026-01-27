@@ -2,533 +2,139 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>No Surprises</title>
-    
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,700&display=swap" rel="stylesheet">
-    
-    <style>
-        /* --- THEME --- */
-        :root {
-            --bg: #ffde59; /* Bright Yellow */
-            --white: #ffffff;
-            --red: #ff5757;
-            --black: #000000;
-            --border: 3px solid var(--black);
-            --shadow: 6px 6px 0px var(--black);
-        }
-
-        * { box-sizing: border-box; font-family: 'Space Mono', monospace; -webkit-tap-highlight-color: transparent; }
-
-        body {
-            background-color: var(--bg);
-            background-image: radial-gradient(#000 10%, transparent 11%);
-            background-size: 20px 20px;
-            margin: 0;
-            padding: 20px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: var(--black);
-        }
-
-        .container {
-            width: 100%;
-            max-width: 480px; 
-            margin: 0 auto;
-        }
-
-        /* --- CARD --- */
-        .card {
-            background: var(--white);
-            border: var(--border);
-            box-shadow: var(--shadow);
-            padding: 2rem 1.5rem;
-            position: relative;
-            margin-bottom: 20px;
-            transition: transform 0.2s;
-            min-height: 55vh; 
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        /* --- COMIC STYLE LOGO --- */
-        .comic-header-wrapper {
-            position: relative;
-            text-align: center;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .comic-burst {
-            position: absolute;
-            width: 280px;
-            height: 120px;
-            background: var(--red);
-            z-index: 0;
-            border: 3px solid var(--black);
-            clip-path: polygon(
-                20% 0%, 32% 15%, 45% 0%, 55% 15%, 70% 0%, 80% 15%, 95% 5%, 85% 30%, 
-                100% 35%, 85% 50%, 100% 65%, 85% 70%, 95% 90%, 75% 80%, 60% 95%, 
-                50% 80%, 40% 95%, 25% 80%, 10% 95%, 20% 65%, 0% 60%, 15% 45%, 
-                0% 30%, 15% 20%
-            );
-            transform: rotate(-3deg);
-            box-shadow: 4px 4px 0px rgba(0,0,0,0.2);
-        }
-
-        h1 {
-            font-size: 1.8rem;
-            text-transform: uppercase;
-            color: var(--white);
-            position: relative;
-            z-index: 2;
-            margin: 0;
-            padding: 10px;
-            font-style: italic;
-            text-shadow: 3px 3px 0px var(--black);
-            transform: rotate(-3deg);
-        }
-
-        /* --- LANDING PAGE --- */
-        .landing-content {
-            display: flex;
-            flex-direction: column;
-            gap: 0.6rem; 
-        }
-
-        .landing-text { 
-            line-height: 1.3;
-            font-size: 0.95rem;
-            text-align: center; 
-            letter-spacing: -0.5px;
-        }
-        
-        .landing-text p { margin-bottom: 8px; }
-        
-        .highlight { 
-            background: var(--black); 
-            color: var(--white); 
-            padding: 2px 6px; 
-            display: inline-block;
-            transform: rotate(-1deg);
-        }
-
-        /* --- INPUTS & BUTTONS --- */
-        label { font-size: 1.1rem; font-weight: bold; display: block; margin-bottom: 5px; }
-        .sub-label { font-size: 0.85rem; opacity: 0.6; font-style: italic; margin-bottom: 15px; display: block; }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 12px;
-            font-size: 1rem;
-            border: var(--border);
-            background: #f4f4f4;
-            outline: none;
-            border-radius: 0;
-        }
-        input[type="text"]:focus { background: var(--white); box-shadow: 4px 4px 0px var(--black); }
-
-        .btn {
-            background: var(--black);
-            color: var(--white);
-            border: none;
-            padding: 15px;
-            width: 100%;
-            font-size: 1rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            cursor: pointer;
-            margin-top: 15px;
-            border: 3px solid transparent;
-            transition: 0.1s;
-        }
-        .btn:active { transform: translate(2px, 2px); }
-
-        /* --- SHARE BUTTON (New Style) --- */
-        .share-btn {
-            background: var(--red);
-            color: var(--white);
-            box-shadow: 4px 4px 0px var(--black);
-        }
-        .share-btn:hover { background: #000; }
-
-        /* --- CHECKBOXES --- */
-        .option {
-            display: flex;
-            align-items: center;
-            border: var(--border);
-            padding: 10px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            background: var(--white);
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
-        .option:hover { background: var(--bg); }
-        .option.selected { background: var(--black); color: var(--white); }
-        .option input { margin-right: 12px; width: 18px; height: 18px; accent-color: var(--black); }
-
-        /* --- PROGRESS BAR --- */
-        .progress-box { width: 100%; height: 10px; border: var(--border); background: var(--white); margin-bottom: 8px; }
-        .progress-fill { height: 100%; background: var(--red); width: 0%; transition: width 0.3s; }
-        .step-count { text-align: right; font-weight: bold; font-size: 0.75rem; margin-bottom: 15px; display: block; }
-
-        /* --- SCREENS --- */
-        .hidden { display: none !important; }
-        .fade-in { animation: fade 0.4s ease; }
-        @keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .shake { animation: shake 0.4s ease; }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } 100% { transform: translateX(0); } }
-
-        /* --- RESULT CARD --- */
-        .res-header { border-bottom: var(--border); padding-bottom: 10px; margin-bottom: 15px; }
-        .res-name { font-size: 2.2rem; background: var(--black); color: var(--white); padding: 5px 10px; display: inline-block; margin-bottom: 5px; }
-        .res-sub { font-style: italic; font-size: 0.9rem; line-height: 1.4; }
-        
-        .res-box { border: var(--border); padding: 12px; margin-bottom: 15px; position: relative; background: #fafafa; }
-        .res-label { 
-            position: absolute; top: -10px; left: 10px; 
-            background: var(--red); color: var(--white); 
-            padding: 2px 6px; font-size: 0.65rem; border: var(--border); 
-            text-transform: uppercase; font-weight: bold;
-        }
-        .res-row { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 4px; }
-        .res-val { font-weight: bold; }
-        
-        .final-box { 
-            border: 2px dashed var(--black); padding: 15px; 
-            text-align: center; background: var(--bg); font-weight: bold;
-        }
-        .action-row { display: flex; gap: 10px; margin-top: 20px; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arnav | Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="container">
-        
-        <div class="card" id="cardElement">
-            
-            <div id="landing" class="landing-content">
-                <div class="comic-header-wrapper">
-                    <div class="comic-burst"></div>
-                    <h1>No Surprises</h1>
-                </div>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
 
-                <div class="landing-text">
-                    <p>you meet someone new.</p>
-                    <p>the script starts playing.</p>
-                    <p style="opacity: 0.6;">"what do you do?"<br>"where are you from?"</p>
-                    <p>by the third time, it feels like deja vu.</p>
-                    <p>so i made a filter.</p>
-                    <p>one link that defines your vibe,<br> your style, and your boundaries.</p>
-                    <p>no repeating yourself.</p>
-                    <p><span class="highlight">send this before you text.</span></p>
-                    <p>the real conversation starts after.</p>
-                </div>
-
-                <button class="btn" onclick="start()">MAKE MY CARD</button>
-                <div style="text-align: center; font-size: 0.8rem; font-weight: bold; opacity: 0.5; margin-top: -10px;">30s</div>
-            </div>
-
-            <div id="wizard" class="hidden">
-                <div class="progress-box"><div class="progress-fill" id="bar"></div></div>
-                <span class="step-count" id="count">QUESTION 1/9</span>
-
-                <div class="step" data-step="1">
-                    <label>1 → What's your name?</label>
-                    <span class="sub-label">just first name</span>
-                    <input type="text" id="name" placeholder="type here...">
-                    <button class="btn" onclick="next()">NEXT</button>
-                </div>
-
-                <div class="step hidden" data-step="2">
-                    <label>2 → What do you do?</label>
-                    <span class="sub-label">school / college / work?</span>
-                    <input type="text" id="occ" placeholder="e.g. stanford cs...">
-                    <button class="btn" onclick="next()">NEXT</button>
-                </div>
-
-                <div class="step hidden" data-step="3">
-                    <label>3 → What do you do for fun?</label>
-                    <span class="sub-label">hobbies that actually matter</span>
-                    <input type="text" id="hobby" placeholder="type here...">
-                    <button class="btn" onclick="next()">NEXT</button>
-                </div>
-
-                <div class="step hidden" data-step="4">
-                    <label>4 → Current life vibe?</label>
-                    <div class="option" onclick="sel(this, 'vibe')"><input type="radio" name="vibe" value="building myself">building myself</div>
-                    <div class="option" onclick="sel(this, 'vibe')"><input type="radio" name="vibe" value="studying / working">studying / working</div>
-                    <div class="option" onclick="sel(this, 'vibe')"><input type="radio" name="vibe" value="chilling">chilling & observing</div>
-                    <div class="option" onclick="sel(this, 'vibe')"><input type="radio" name="vibe" value="figuring it out">figuring stuff out</div>
-                    <div class="option" onclick="sel(this, 'vibe')"><input type="radio" name="vibe" value="explain later">explain later</div>
-                    <button class="btn" onclick="next()">NEXT</button>
-                </div>
-
-                <div class="step hidden" data-step="5">
-                    <label>5 → Reply style?</label>
-                    <div class="option" onclick="sel(this, 'reply')"><input type="radio" name="reply" value="fast">⚡ fast</div>
-                    <div class="option" onclick="sel(this, 'reply')"><input type="radio" name="reply" value="normal">🙂 normal</div>
-                    <div class="option" onclick="sel(this, 'reply')"><input type="radio" name="reply" value="slow">🐢 slow</div>
-                    <div class="option" onclick="sel(this, 'reply')"><input type="radio" name="reply" value="in batches">📦 in batches</div>
-                    <div class="option" onclick="sel(this, 'reply')"><input type="radio" name="reply" value="depends">😏 depends</div>
-                    <button class="btn" onclick="next()">NEXT</button>
-                </div>
-
-                <div class="step hidden" data-step="6" data-limit="2">
-                    <label>6 → Conversation style? (Pick 2)</label>
-                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="funny">funny</div>
-                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="thoughtful">thoughtful</div>
-                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="chill">chill</div>
-                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="chaotic">chaotic good</div>
-                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="sarcastic">sarcastic</div>
-                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="dry">dry but loyal</div>
-                    <button class="btn" onclick="next()">NEXT</button>
-                </div>
-
-                <div class="step hidden" data-step="7" data-limit="2">
-                    <label>7 → Good at socially? (Pick 2)</label>
-                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="questions">asking questions</div>
-                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="listening">listening</div>
-                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="energy">matching energy</div>
-                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="recs">giving recs</div>
-                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="comfort">making ppl comfortable</div>
-                    <button class="btn" onclick="next()">NEXT</button>
-                </div>
-
-                <div class="step hidden" data-step="8" data-limit="2">
-                    <label>8 → Working on? (Pick 1-2)</label>
-                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="starting">starting convos</div>
-                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="replying">replying faster</div>
-                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="feelings">feelings</div>
-                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="hints">taking hints</div>
-                    <div class="option" onclick="toggle(this)"><input type="checkbox" value="opening">opening up</div>
-                    <button class="btn" onclick="next()">NEXT</button>
-                </div>
-
-                <div class="step hidden" data-step="9">
-                    <label>9 → Before you text me...</label>
-                    <input type="text" id="final" placeholder="set expectations...">
-                    <button class="btn" onclick="finish()">GENERATE CARD 🚀</button>
-                </div>
-            </div>
-
-            <div id="result" class="hidden">
-                <div class="res-header">
-                    <div class="res-name" id="r-name">NAME</div>
-                    <div class="res-sub" id="r-occ">Occupation</div>
-                    <div class="res-sub" id="r-hob">Hobbies</div>
-                </div>
-
-                <div class="res-box">
-                    <div class="res-label">The Vibe</div>
-                    <div class="res-row"><span>Current Era:</span> <span class="res-val" id="r-vibe">...</span></div>
-                    <div class="res-row"><span>Reply Style:</span> <span class="res-val" id="r-reply">...</span></div>
-                </div>
-
-                <div class="res-box">
-                    <div class="res-label">Style</div>
-                    <div class="res-val" id="r-convo">...</div>
-                </div>
-
-                <div class="res-box">
-                    <div class="res-label">I Bring</div>
-                    <div class="res-val" id="r-social">...</div>
-                </div>
-
-                <div class="res-box">
-                    <div class="res-label">Working On</div>
-                    <div class="res-val" id="r-work">...</div>
-                </div>
-
-                <div class="final-box" id="r-final">...</div>
-                
-                <div class="action-row" data-html2canvas-ignore="true">
-                    <button class="btn share-btn" id="shareBtn" onclick="shareCard()">SHARE CARD 📤</button>
-                    <button class="btn" style="background:transparent; color:#000; border:2px solid #000; margin-top:0;" onclick="location.reload()">↺</button>
-                </div>
-            </div>
-
+    <nav class="navbar">
+        <div class="logo">Arnav.</div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="hamburger">
+            <i class="fa-solid fa-bars"></i>
         </div>
-    </div>
+    </nav>
 
-    <div class="github-footer">
-        <a href="https://github.com/Arnav-SAI/no-surprises" target="_blank" class="github-btn">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-            Star on GitHub
-        </a>
-    </div>
+    <header id="home" class="hero">
+        <div class="hero-content hidden">
+            <span class="greeting">Hello, I'm</span>
+            <h1 class="glitch-text" data-text="Arnav Saini">Arnav Saini</h1>
+            <p class="subtitle">Building the future with <span class="highlight">Code</span> & <span class="highlight">Design</span>.</p>
+            <div class="cta-buttons">
+                <a href="#projects" class="btn primary">View My Work</a>
+                <a href="#contact" class="btn secondary">Contact Me</a>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
+        </div>
+    </header>
 
-<script>
-    // --- DATABASE CONFIG ---
-    const DB_URL = "https://vhwwantlhvevntkhzjev.supabase.co";
-    const DB_KEY = "sb_publishable_vkOakpvu1KvkambRZ_k_LA_pJ6EP-Aa";
-    
-    let db = null;
-    try {
-        if(window.supabase) db = window.supabase.createClient(DB_URL, DB_KEY);
-    } catch(e) { console.log("DB Offline"); }
+    <section id="about" class="section">
+        <div class="container hidden">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-grid">
+                <div class="about-text">
+                    <p>I am a passionate developer driven by the desire to create impactful digital experiences. I don't just write code; I solve problems using modern technology and creative thinking.</p>
+                    <p>Currently focused on full-stack development and exploring the boundaries of UI/UX design.</p>
+                    
+                    <div class="skills-wrapper">
+                        <h3>Tech Stack</h3>
+                        <div class="skills-grid">
+                            <span class="skill-tag"><i class="fa-brands fa-html5"></i> HTML5</span>
+                            <span class="skill-tag"><i class="fa-brands fa-css3-alt"></i> CSS3</span>
+                            <span class="skill-tag"><i class="fa-brands fa-js"></i> JavaScript</span>
+                            <span class="skill-tag"><i class="fa-brands fa-react"></i> React</span>
+                            <span class="skill-tag"><i class="fa-brands fa-node"></i> Node.js</span>
+                            <span class="skill-tag"><i class="fa-brands fa-python"></i> Python</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    // --- STATE ---
-    let step = 1;
-    const total = 9;
-    const data = {};
+    <section id="projects" class="section">
+        <div class="container hidden">
+            <h2 class="section-title">Featured Projects</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="card-content">
+                        <h3>Project One</h3>
+                        <p>A sleek web application built to solve real-world problems. Features responsive design and real-time data.</p>
+                        <div class="card-tech">
+                            <span>React</span><span>Node</span>
+                        </div>
+                        <div class="card-links">
+                            <a href="#" target="_blank"><i class="fa-brands fa-github"></i> Code</a>
+                            <a href="#" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i> Live</a>
+                        </div>
+                    </div>
+                </div>
 
-    function start() {
-        document.getElementById('landing').classList.add('hidden');
-        document.getElementById('wizard').classList.remove('hidden');
-        document.getElementById('wizard').classList.add('fade-in');
-    }
+                <div class="project-card">
+                    <div class="card-content">
+                        <h3>Project Two</h3>
+                        <p>An interactive dashboard with data visualization and glassmorphism UI components.</p>
+                        <div class="card-tech">
+                            <span>JS</span><span>API</span>
+                        </div>
+                        <div class="card-links">
+                            <a href="#" target="_blank"><i class="fa-brands fa-github"></i> Code</a>
+                            <a href="#" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i> Live</a>
+                        </div>
+                    </div>
+                </div>
 
-    // --- INPUT HANDLERS ---
-    function sel(el, key) {
-        const sibs = el.parentElement.querySelectorAll('.option');
-        sibs.forEach(s => {
-            s.classList.remove('selected');
-            s.querySelector('input').checked = false;
-        });
-        el.classList.add('selected');
-        el.querySelector('input').checked = true;
-    }
+                 <div class="project-card">
+                    <div class="card-content">
+                        <h3>Project Three</h3>
+                        <p>Experimental design portfolio focusing on typography and micro-interactions.</p>
+                        <div class="card-tech">
+                            <span>HTML</span><span>SCSS</span>
+                        </div>
+                        <div class="card-links">
+                            <a href="#" target="_blank"><i class="fa-brands fa-github"></i> Code</a>
+                            <a href="#" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i> Live</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    function toggle(el) {
-        const input = el.querySelector('input');
-        const parent = el.closest('.step');
-        const limit = parseInt(parent.getAttribute('data-limit') || 10);
-        const checked = parent.querySelectorAll('input:checked').length;
+    <section id="contact" class="section">
+        <div class="container hidden">
+            <h2 class="section-title">Get In Touch</h2>
+            <p class="contact-sub">Have a project in mind or just want to say hi?</p>
+            <div class="social-links">
+                <a href="https://github.com/Arnav-SAI" class="social-btn"><i class="fa-brands fa-github"></i></a>
+                <a href="#" class="social-btn"><i class="fa-brands fa-linkedin-in"></i></a>
+                <a href="#" class="social-btn"><i class="fa-brands fa-twitter"></i></a>
+                <a href="mailto:your-email@example.com" class="social-btn"><i class="fa-solid fa-envelope"></i></a>
+            </div>
+        </div>
+    </section>
 
-        if(!input.checked && checked >= limit) return;
+    <footer>
+        <p>&copy; 2026 Arnav. Built with <i class="fa-solid fa-heart"></i> and Code.</p>
+    </footer>
 
-        input.checked = !input.checked;
-        if(input.checked) el.classList.add('selected');
-        else el.classList.remove('selected');
-    }
-
-    function next() {
-        const div = document.querySelector(`.step[data-step="${step}"]`);
-        
-        const txt = div.querySelector('input[type="text"]');
-        if(txt && txt.value.trim() === "") { shake(txt); return; }
-
-        const opts = div.querySelectorAll('input[type="radio"], input[type="checkbox"]');
-        if(opts.length > 0) {
-            const hasCheck = Array.from(opts).some(i => i.checked);
-            if(!hasCheck) { shake(div.querySelector('.btn')); return; }
-        }
-
-        if(txt) {
-            if(step === 1) data.name = txt.value;
-            if(step === 2) data.occ = txt.value;
-            if(step === 3) data.hob = txt.value;
-            if(step === 9) data.final = txt.value;
-        } else {
-            const checked = Array.from(div.querySelectorAll('input:checked')).map(i => i.value);
-            if(step === 4) data.vibe = checked[0];
-            if(step === 5) data.reply = checked[0];
-            if(step === 6) data.convo = checked.join(" + ");
-            if(step === 7) data.social = checked.join(" + ");
-            if(step === 8) data.work = checked.join(" + ");
-        }
-
-        div.classList.add('hidden');
-        step++;
-        const nextDiv = document.querySelector(`.step[data-step="${step}"]`);
-        nextDiv.classList.remove('hidden');
-        nextDiv.classList.add('fade-in');
-        
-        document.getElementById('bar').style.width = ((step-1)/(total-1))*100 + "%";
-        document.getElementById('count').innerText = `QUESTION ${step}/${total}`;
-    }
-
-    function shake(el) {
-        el.style.borderColor = "red";
-        el.classList.add('shake');
-        setTimeout(() => { el.classList.remove('shake'); el.style.borderColor = "black"; }, 500);
-    }
-
-    async function finish() {
-        const txt = document.getElementById('final');
-        if(txt.value.trim() === "") { shake(txt); return; }
-        data.final = txt.value;
-
-        // Render Card
-        document.getElementById('r-name').innerText = data.name;
-        document.getElementById('r-occ').innerText = data.occ;
-        document.getElementById('r-hob').innerText = data.hob;
-        document.getElementById('r-vibe').innerText = data.vibe;
-        document.getElementById('r-reply').innerText = data.reply;
-        document.getElementById('r-convo').innerText = data.convo;
-        document.getElementById('r-social').innerText = data.social;
-        document.getElementById('r-work').innerText = data.work;
-        document.getElementById('r-final').innerText = `"${data.final}"`;
-
-        document.getElementById('wizard').classList.add('hidden');
-        document.getElementById('result').classList.remove('hidden');
-        document.getElementById('result').classList.add('fade-in');
-
-        // Silent Save
-        if(db) {
-            await db.from('user').insert({
-                names: data.name,
-                occupatio: data.occ,
-                hobbies: data.hob,
-                vibe: data.vibe,
-                reply_style: data.reply,
-                convo_style: data.convo,
-                social_skills: data.social,
-                working_on: data.work,
-                final_msg: data.final
-            });
-        }
-    }
-
-    // --- SHARE FUNCTION ---
-    async function shareCard() {
-        const shareBtn = document.getElementById('shareBtn');
-        const originalText = shareBtn.innerText;
-        shareBtn.innerText = "CAPTURING...";
-        
-        try {
-            const element = document.getElementById('cardElement'); // Capture the whole card container
-            const canvas = await html2canvas(element, {
-                backgroundColor: '#ffde59', // Match body bg
-                scale: 2 // High Res
-            });
-
-            canvas.toBlob(async (blob) => {
-                const file = new File([blob], "no-surprises-card.png", { type: "image/png" });
-
-                if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                    await navigator.share({
-                        files: [file],
-                        title: 'No Surprises',
-                        text: 'My No Surprises Card'
-                    });
-                } else {
-                    // Fallback Download
-                    const link = document.createElement('a');
-                    link.download = 'my-card.png';
-                    link.href = canvas.toDataURL();
-                    link.click();
-                }
-                shareBtn.innerText = originalText;
-            });
-        } catch (err) {
-            console.error(err);
-            shareBtn.innerText = "ERROR ☹️";
-            setTimeout(() => shareBtn.innerText = originalText, 2000);
-        }
-    }
-</script>
-
+    <script src="script.js"></script>
 </body>
 </html>
