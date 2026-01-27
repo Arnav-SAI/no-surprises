@@ -487,7 +487,18 @@
 <script>
     const SUPABASE_URL = "https://vhwwantlhvevntkhzjev.supabase.co"; 
     const SUPABASE_KEY = "sb_publishable_vkOakpvu1KvkambRZ_k_LA_pJ6EP-Aa";
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // Initialize Supabase Safely
+    let supabase = null;
+    try {
+        if (window.supabase) {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        } else {
+            console.warn("Supabase library not loaded. Form will work without saving data.");
+        }
+    } catch (err) {
+        console.warn("Supabase failed to initialize:", err);
+    }
 
     let currentStep = 1;
     const totalSteps = 9;
@@ -617,9 +628,9 @@
                         final_msg: finalMsg
                     });
                 
-                if(error) console.error(error);
+                if(error) console.error("Supabase Save Error:", error);
             } catch(e) {
-                console.error(e);
+                console.error("Connection Error:", e);
             }
         }
 
