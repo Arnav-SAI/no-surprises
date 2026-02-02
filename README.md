@@ -3,12 +3,6 @@
 
 An entrepreneurial take on the viral textationships tool, redesigned with a Neo-Brutalist aesthetic. This project replaces boring, surface-level knowledge with a systems-thinking approach to social introductions.
 
-🛠 Tech Stack
-HTML5/CSS3: Custom layout using a high-contrast, hard-shadow aesthetic.
-
-Vanilla JavaScript: State management for the 9-step wizard and dynamic card generation.
-
-Google Fonts: Space Mono for that technical, academic-yet-youthful intensity.
 
 🚀 Features
 9-Step Interactive Wizard: Logical flow from basic identity to social "vibe checks."
